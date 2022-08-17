@@ -1,4 +1,4 @@
-#include "../include/singleton.hpp"
+#include "../include/design_patterns/singleton.hpp"
 #include <string>
 #include <iostream>/*std cout cin*/
 using namespace pirates_speed;

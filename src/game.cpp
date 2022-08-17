@@ -1,6 +1,7 @@
 #include "../include/game.hpp"
-#include "../include/singleton.hpp"
+#include "../include/design_patterns/singleton.hpp"
 #include <iostream>/*std cout cin*/
+
 namespace pirates_speed
 {
     Game& Game::GetInstance()
@@ -8,14 +9,15 @@ namespace pirates_speed
         return Singleton<Game>::GetInstance();
     }
 
-    Game::~Game()
-    {
-        std::cout << "Game is over" << std::endl;
-    }
 
     void Game::StartGame()
     {
         std::cout << "Game is starting" << std::endl;
+    }
+
+    void Game::EndGame()
+    {
+        std::cout << "Game is ending" << std::endl;
     }
 
 } // namespace pirates_speed
