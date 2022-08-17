@@ -7,7 +7,7 @@ class Singleton
 {
     class GarbageCollector;
     public:
-        Singleton() = delete;
+        explicit Singleton() = delete;
         ~Singleton() = delete;
         Singleton(const Singleton&) = delete;
         Singleton& operator=(const Singleton&) = delete;
@@ -40,6 +40,7 @@ T& Singleton<T, Args...>::GetInstance(Args...args)
     if (m_instance == nullptr)
     {
         m_instance = new T(args...);
+        static_cast<void>(gc);
     }
     return *m_instance;
 }
@@ -47,7 +48,7 @@ T& Singleton<T, Args...>::GetInstance(Args...args)
 template <typename T, typename ...Args>
 Singleton<T, Args...>::GarbageCollector::~GarbageCollector()
 {
-    if (Singleton<T, Args...>::m_instance)
+    if (Singleton<T, Args...>::m_instance != nullptr)
     {
         delete Singleton<T, Args...>::m_instance;
     }
