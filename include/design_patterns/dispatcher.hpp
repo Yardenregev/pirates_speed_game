@@ -1,107 +1,83 @@
 #pragma once
 
-#include <vector>
-#include <memory>
+#include <vector>   // vector
+
 namespace pirates_speed
 {
-    
-template<typename T>
+
+template <typename T>
 class Callback;
 
-template<typename T>
+template <typename T>
 class Dispatcher
 {
+public:
+    Dispatcher() : m_observers() {}
+    virtual void Subscribe(Callback<T>* callback_);
+    virtual void Unsubscribe(Callback<T>* callback_);
+    virtual void NotifyAll(T event_);
 
-    public:
-        Dispatcher() = default;
-        ~Dispatcher();
-        Dispatcher(const Dispatcher &) = delete;
-        Dispatcher& operator= (const Dispatcher &) = delete;
+    virtual ~Dispatcher();
 
-    public:
-        void Subscribe(std::shared_ptr<Callback<T>>);
-        void Unsubscribe(std::shared_ptr<Callback<T>>);
-        void NotifyAll(T event);
-
-    private:
-        std::vector<std::shared_ptr<Callback<T>>> m_vec;
-
+private:
+    std::vector<Callback<T>*> m_observers;
 };
 
-template<typename T>
+template <typename T>
 class Callback
 {
-    public:
-        Callback(Dispatcher<T> & disp);
-        ~Callback();
-        Callback(const Callback &) = delete;
-        Callback& operator= (const Callback &) = delete;
-
-    public:
-        void Update(T event) = 0;
-        void Unsubscribe();
-        void Subscribe(Dispatcher<T> & disp);
-
-    private:
-        Dispatcher<T>& m_disp;
-        bool m_subscribed;
+public:
+     Callback(Dispatcher<T> &dispatcher_) : m_dispatcher(dispatcher_) {
+            m_dispatcher.Subscribe(this);
+     }
+    virtual void Update(T event_) = 0;
+    virtual void DeathUpdate() = 0;
+    virtual ~Callback() = 0;
+private:
+    Dispatcher<T> &m_dispatcher;
 };
 
-template<typename T>
-Dispatcher<T>::~Dispatcher()
+template <typename T>
+void Dispatcher<T>::Subscribe(Callback<T>* callback_)
 {
-    for (auto & cb : m_vec)
-    {
-        cb->Unsubscribe();
-    }
+    m_observers.push_back(callback_);
 }
 
-template<typename T>
-void Dispatcher<T>::Subscribe(std::shared_ptr<Callback<T>> cb)
+template <typename T>
+void Dispatcher<T>::Unsubscribe(Callback<T>* callback_)
 {
-    m_vec.push_back(cb);
-    cb->Subscribe(*this);
-}
-
-template<typename T>
-void Dispatcher<T>::Unsubscribe(std::shared_ptr<Callback<T>> cb)
-{
-    for (size_t i = 0; i < m_vec.size(); i++)
+    for(size_t i = 0; i < m_observers.size();i++)
     {
-        if (m_vec[i] == cb)
+        if(m_observers[i] == callback_)
         {
-            m_vec.erase(m_vec.begin() + i);
+            m_observers.erase(m_observers.begin() + i);
             break;
         }
     }
 }
 
-template<typename T>
-void Dispatcher<T>::NotifyAll(T event)
+template <typename T>
+void Dispatcher<T>::NotifyAll(T event_)
 {
-    for (size_t i = 0; i < m_vec.size(); i++)
+    for(size_t i = 0; i < m_observers.size();i++)
     {
-        m_vec[i]->Update(event);
+        m_observers[i]->Update(event_);
     }
 }
 
-
-template<typename T>
-Callback<T>::Callback(Dispatcher<T> & disp) : m_disp(disp), m_subscribed(false)
+template <typename T>
+Dispatcher<T>::~Dispatcher()
 {
-    m_disp.Subscribe(this);
-    m_subscribed = true;
+    for(size_t i = 0; i < m_observers.size();i++)
+    {
+        m_observers[i]->DeathUpdate();
+    }
 }
 
-template<typename T>
+template <typename T>
 Callback<T>::~Callback()
 {
-    if (m_subscribed)
-    {
-        m_disp.Unsubscribe(this);
-        m_subscribed = false;
-    }
+    m_dispatcher.Unsubscribe(this);
 }
-
 
 } // namespace pirates_speed

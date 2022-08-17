@@ -13,4 +13,9 @@ namespace pirates_speed
     {
         std::cout << "Captain: " << command << std::endl;
     }
+
+    void Captain::DeathUpdate()
+    {
+        std::cout << "Captain: I am dead!" << std::endl;
+    }
 } // namespace pirates_speed

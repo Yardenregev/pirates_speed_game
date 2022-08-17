@@ -11,6 +11,7 @@ namespace pirates_speed
         public:
             Captain(Commander &commander);
             void Update(const std::string &command);
+            void DeathUpdate();
         private:
             Commander &m_commander;
     };
