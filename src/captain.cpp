@@ -3,6 +3,8 @@
 
 namespace pirates_speed
 {
+    bool Captain::m_was_command_answered = false;
+
     Captain::Captain(Commander &commander,
                     const std::string & name,
                     const Inventory<std::string,std::shared_ptr<CrewPirate>> &game_inventory
@@ -18,6 +20,7 @@ namespace pirates_speed
             m_personal_inventory.Add(i,m_game_inventory.GetRandom());
         }
 
+        PrintInventory();
     }
     
     void Captain::Update(const std::string &given_command)
@@ -75,11 +78,13 @@ namespace pirates_speed
                 pirate->ExecuteCommand();
                 m_personal_inventory.Remove(pirate_index);
                 std::cout << "Well done captain " << m_name << "!" << std::endl;
+                PrintInventory();
                 return;
             }    
         }
 
         std::cout << "Captain " << m_name << ", You have failed!" << std::endl;
         m_personal_inventory.Add(m_personal_inventory.GetSize(),m_game_inventory.GetRandom());
+        PrintInventory();
     }
 } // namespace pirates_speed
