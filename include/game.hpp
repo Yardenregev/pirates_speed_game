@@ -37,7 +37,7 @@ class Game
         void ConnectCommanderToCaptain();
         void ConnectCaptainToCommander(std::shared_ptr<Captain> &captain);
         void ConnectCommanderAndCaptain(std::shared_ptr<Captain> &captain);
-
+        void CheckCorrectAnswer(const std::string &command);
 };
     
 } // namespace pirates_speed

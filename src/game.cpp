@@ -102,11 +102,8 @@ namespace pirates_speed
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
-            // for (auto &captain : m_captains)
-            // {
-            //     captain->RecieveMessage();
-            // }
             m_commander->ShoutCommand(given_command);
+            CheckCorrectAnswer(given_command);
         }
 
         PrintGameOver();
@@ -133,6 +130,11 @@ namespace pirates_speed
     void Game::AddPirateToGameInventory(const std::string &role, std::shared_ptr<CrewPirate> pirate)
     {
         m_game_pirate_inventory.Add(role, pirate);
+    }
+
+    void Game::CheckCorrectAnswer(const std::string &command)
+    {
+        
     }
 
 

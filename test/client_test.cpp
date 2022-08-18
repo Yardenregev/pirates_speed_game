@@ -9,7 +9,14 @@ void TestGame()
     tcp_client.Connect();
 
     std::string message = tcp_client.ReceiveMessage();
-    std::cout << "Captain: " << message << std::endl;
+    while(message != "End of game")
+    {
+        std::cout << "Captain: " << message << std::endl;
+        size_t choice = 0;
+        std::cin >> choice;
+        tcp_client.SendMessage(std::to_string(choice));
+        message = tcp_client.ReceiveMessage();
+    }
 }
 
 int main ()

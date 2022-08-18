@@ -12,8 +12,10 @@ namespace pirates_speed
     }
 
     Commander::Commander(const std::string & name, int port, const std::string & ip_address)
-        : m_tcp_dispatcher(port, ip_address)
-        , m_name(name)
+        : m_tcp_dispatcher(port, ip_address),
+          m_name(name),
+          answers(),
+          m_answered(false)
     {
     }
 
@@ -28,14 +30,22 @@ namespace pirates_speed
     }
     
 
-    void Commander::SendMessageToLastCaptain(const std::string &command)
+    void Commander::ReciveAnswers()
     {
-        m_tcp_dispatcher.SendMessageToLastClient(command);
+        while(m_answered == false)
+        {
+            std::string answer = m_tcp_dispatcher.ReceiveMessage();
+            answers.Push(answer);
+        }
     }
 
-    char *Commander::ReciveMessageFromLastCaptain()
+    void Commander::HandleAnswers()
     {
-        return m_tcp_dispatcher.ReciveMessageFromLastClient();
+        while(m_answered == false)
+        {    
+            std::thread t(&Commander::ReciveAnswers, this);
+            std::string answer;
+            answers.Pop(answer);
+        }
     }
-
 } // namespace pirates_speed
