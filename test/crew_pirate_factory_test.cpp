@@ -40,7 +40,7 @@ void TestPirateFactory()
     CrewPirate *cooker = crew_pirate_factory.CreateCrewPirate("Cook", "Bob", std::make_shared<CookCommand>());
 
     cooker->ExecuteCommand();
-
+    cooker->Print();
     delete cooker;
 }
 
