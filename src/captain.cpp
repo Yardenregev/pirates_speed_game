@@ -3,17 +3,15 @@
 
 namespace pirates_speed
 {
-    bool Captain::m_was_command_answered = false;
 
-    Captain::Captain(Commander &commander,
-                    const std::string & name,
-                    const Inventory<std::string,std::shared_ptr<CrewPirate>> &game_inventory
-                    ,size_t num_of_crew_pirates)
-        : Callback<const std::string &>(commander),
-          m_commander(commander),
-          m_game_inventory(game_inventory),
-          m_name(name),
-          m_personal_inventory()
+    Captain::Captain(const std::string & name,
+                             const Inventory<std::string, std::shared_ptr<CrewPirate>> & game_inventory,
+                             const std::string & ip_address, int port,
+                             size_t num_of_crew_pirates)
+          :m_game_inventory(game_inventory),
+           m_name(name),
+           m_personal_inventory(),
+           m_tcp_client(port, ip_address)  
     {
         for (size_t i = 0; i < num_of_crew_pirates; ++i)
         {
@@ -23,15 +21,12 @@ namespace pirates_speed
         PrintInventory();
     }
     
-    void Captain::Update(const std::string &given_command)
-    {
-        std::cout << "Captain: " << given_command << std::endl;
-        HandleInput(given_command);
-    }
 
-    void Captain::DeathUpdate()
+    void Captain::RecieveMessage()
     {
-        std::cout << "Captain: I am dead!" << std::endl;
+        std::string message = m_tcp_client.ReceiveMessage();
+        std::cout << "Captain: " << message << std::endl;
+        HandleInput(message);
     }
 
     bool Captain::IsWinner() const
@@ -87,4 +82,11 @@ namespace pirates_speed
         m_personal_inventory.Add(m_personal_inventory.GetSize(),m_game_inventory.GetRandom());
         PrintInventory();
     }
+
+
+    void Captain::ConnectCommander()
+    {
+        m_tcp_client.Connect();
+    }
+    
 } // namespace pirates_speed
