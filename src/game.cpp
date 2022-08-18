@@ -30,25 +30,25 @@ namespace pirates_speed
     {   
     }
 
-    void Game::ConnectCommanderToCaptain()
-    {
-        m_condition_variable.notify_one();
-        m_commander->AddCaptain();
-    }
+    // void Game::ConnectCommanderToCaptain()
+    // {
+    //     m_condition_variable.notify_one();
+    //     m_commander->AddCaptain();
+    // }
 
-    void Game::ConnectCaptainToCommander(std::shared_ptr<Captain> &captain)
-    {
-        std::unique_lock<std::mutex> lock(m_mutex);
-        m_condition_variable.wait(lock);
-        captain->ConnectCommander();
-    }
+    // void Game::ConnectCaptainToCommander(std::shared_ptr<Captain> &captain)
+    // {
+    //     std::unique_lock<std::mutex> lock(m_mutex);
+    //     m_condition_variable.wait(lock);
+    //     captain->ConnectCommander();
+    // }
 
-    void Game::ConnectCommanderAndCaptain(std::shared_ptr<Captain> &captain)
-    {
-        std::thread thread(&Game::ConnectCommanderToCaptain, this);
-        ConnectCaptainToCommander(captain);
-        thread.join();
-    }
+    // void Game::ConnectCommanderAndCaptain(std::shared_ptr<Captain> &captain)
+    // {
+    //     std::thread thread(&Game::ConnectCommanderToCaptain, this);
+    //     ConnectCaptainToCommander(captain);
+    //     thread.join();
+    // }
 
     void Game::RegisterCaptain()
     {
@@ -75,16 +75,24 @@ namespace pirates_speed
                 m_game_pirate_inventory, ip_address, port, num_of_crew_pirates);
         
         
-        ConnectCommanderAndCaptain(captain);
+        m_commander->AddCaptain();
         m_captains.push_back(captain);
         std::cout << "Captain " << name << " registered" << std::endl;
     }   
+
 
 
     void Game::AddCaptain()
     {
         RegisterCaptain();
     }
+
+    // void Game::AddCaptain(std::shared_ptr<Captain> captain)
+    // {
+    //     std::thread thread(&Commander::AddCaptain, m_commander, captain);
+        
+    //     thread.join();
+    // }
 
     void Game::StartGame()
     {
@@ -94,10 +102,10 @@ namespace pirates_speed
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
-            for (auto &captain : m_captains)
-            {
-                captain->RecieveMessage();
-            }
+            // for (auto &captain : m_captains)
+            // {
+            //     captain->RecieveMessage();
+            // }
             m_commander->ShoutCommand(given_command);
         }
 

@@ -5,11 +5,6 @@
 namespace pirates_speed
 {
 
-    // Commander& Commander::GetInstance(const std::string & name, int port, const std::string & ip_address)
-    // {
-    //     return Singleton<Commander,const std::string &, int,
-    //                  const std::string &>::GetInstance(name, port, ip_address);
-    // }
     
     void Commander::ShoutCommand(const std::string &command)
     {

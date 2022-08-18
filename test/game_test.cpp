@@ -23,7 +23,6 @@ void TestGame()
 
     Game game(commander_name, commander_port, commander_ip_address);
     game.AddCaptain();
-    game.AddCaptain();
 
     game.StartGame();
 }
