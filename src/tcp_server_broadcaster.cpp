@@ -15,7 +15,7 @@ namespace pirates_speed
     }
 
 
-    void TCPServerBroadcaster::AddClient()
+    int TCPServerBroadcaster::AddClient()
     {
         if(listen(GetSocket(), 1) == -1)
         {
@@ -29,6 +29,7 @@ namespace pirates_speed
             throw std::runtime_error("Error accepting connection");
         }
         m_clients.push_back(client_socket);
+        return client_socket;
     }
 
     void TCPServerBroadcaster::SendMessageToAll(const std::string &message)
@@ -42,23 +43,42 @@ namespace pirates_speed
         }
     }
 
-    char *TCPServerBroadcaster::ReciveMessageFromLastClient()
+    void TCPServerBroadcaster::SendMessageToClient(const std::string &message, int client_socket)
     {
-        char *buffer = new char[1024];
-        if(recv(m_clients.back(), buffer, 1024, 0) == -1)
+        if(send(client_socket, message.c_str(), message.size(), 0) == -1)
         {
-            throw std::runtime_error("Error recieving message");
+            throw std::runtime_error("Error sending message to client");
+        }
+    }
+
+    std::string TCPServerBroadcaster::ReciveMessageFromClient(int client_socket)
+    {
+        char buffer[1024] = {0};
+        if(recv(client_socket, buffer, 1024, 0) == -1)
+        {
+            throw std::runtime_error("Error recieving message from client");
         }
         return buffer;
     }
 
-    void TCPServerBroadcaster::SendMessageToLastClient(const std::string &message)
-    {
-        if(send(m_clients.back(), message.c_str(), message.size(), 0) == -1)
-        {
-            throw std::runtime_error("Error sending message");
-        }
-    }
+
+    // char *TCPServerBroadcaster::ReciveMessageFromLastClient()
+    // {
+    //     char *buffer = new char[1024];
+    //     if(recv(m_clients.back(), buffer, 1024, 0) == -1)
+    //     {
+    //         throw std::runtime_error("Error recieving message");
+    //     }
+    //     return buffer;
+    // }
+
+    // void TCPServerBroadcaster::SendMessageToLastClient(const std::string &message)
+    // {
+    //     if(send(m_clients.back(), message.c_str(), message.size(), 0) == -1)
+    //     {
+    //         throw std::runtime_error("Error sending message");
+    //     }
+    // }
     
 } // namespace pirates_speed
     

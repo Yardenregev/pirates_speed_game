@@ -18,11 +18,14 @@ public:
     virtual ~CrewPirate() = 0;
 
     void ExecuteCommand();
-    void Print() const;
 
     const std::string &GetCommandName() const;
 
     void SetCommand(std::shared_ptr<Command> command);
+
+    const std::string &GetName() const;
+
+    std::string ToString() const;
 
 private:
     std::string m_name;

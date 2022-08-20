@@ -19,6 +19,7 @@ public:
     bool Contains(KEY key) const;
     size_t GetSize() const;
 
+
     typename std::map<KEY, TYPE>::iterator begin();
     typename std::map<KEY, TYPE>::iterator end();
 
@@ -45,12 +46,13 @@ void Inventory<KEY, TYPE>::Add(KEY key, TYPE type)
 template <typename KEY, typename TYPE>
 TYPE Inventory<KEY, TYPE>::Get(KEY key) const
 {
-    if(m_inventory.find(key) == m_inventory.end())
+    auto answer = m_inventory.at(key);
+    if(answer == nullptr)
     {
-        throw std::runtime_error("No such key in inventory");
+        throw std::runtime_error("No such pirate");
     }
 
-    return m_inventory.at(key);
+    return answer;
 }
 
 
@@ -111,7 +113,7 @@ bool Inventory<KEY, TYPE>::IsEmpty() const
 template <typename KEY, typename TYPE>
 bool Inventory<KEY, TYPE>::Contains(KEY key) const
 {
-    return m_inventory.find(key) != m_inventory.end();
+    return (m_inventory.at(key) != nullptr);
 }
 
 
@@ -120,6 +122,8 @@ size_t Inventory<KEY, TYPE>::GetSize() const
 {
     return m_inventory.size();
 }
+
+
 
 
 

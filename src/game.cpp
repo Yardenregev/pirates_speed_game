@@ -10,7 +10,8 @@ namespace pirates_speed
 {
 
     Game::Game(const std::string & commander_name, int port, const std::string & ip_address)
-    : m_commander(new Commander(commander_name, port, ip_address)),
+    : m_server(new Server(port, ip_address)),
+      m_commander_name(commander_name),
       m_captains(),
       m_winner(nullptr),
       m_game_pirate_inventory(),
@@ -26,58 +27,31 @@ namespace pirates_speed
 
 
 
-    Game::~Game()
-    {   
-    }
-
-    // void Game::ConnectCommanderToCaptain()
-    // {
-    //     m_condition_variable.notify_one();
-    //     m_commander->AddCaptain();
-    // }
-
-    // void Game::ConnectCaptainToCommander(std::shared_ptr<Captain> &captain)
-    // {
-    //     std::unique_lock<std::mutex> lock(m_mutex);
-    //     m_condition_variable.wait(lock);
-    //     captain->ConnectCommander();
-    // }
-
-    // void Game::ConnectCommanderAndCaptain(std::shared_ptr<Captain> &captain)
-    // {
-    //     std::thread thread(&Game::ConnectCommanderToCaptain, this);
-    //     ConnectCaptainToCommander(captain);
-    //     thread.join();
-    // }
-
     void Game::RegisterCaptain()
     {
-        std::string name;
-        int port;
-        std::string ip_address;
-        size_t num_of_crew_pirates;
-        std::cout << "Enter captain name: ";
-        std::cin >> name;
-        std::cout << "Enter captain port: ";
-        std::cin >> port;
-        std::cout << "Enter captain ip address: ";
-        std::cin >> ip_address;
-        std::cout << "Enter captain number of crew pirates: ";
-        std::cin >> num_of_crew_pirates;
+        // int port;
+        // std::string ip_address;
+        // size_t num_of_crew_pirates;
+        // std::cout << "Enter captain name: ";
+        // std::cin >> name;
+        // std::cout << "Enter captain port: ";
+        // std::cin >> port;
+        // std::cout << "Enter captain ip address: ";
+        // std::cin >> ip_address;
+        // std::cout << "Enter captain number of crew pirates: ";
+        // std::cin >> num_of_crew_pirates;
 
-        if(name.empty() || ip_address.empty() || port == 0 || num_of_crew_pirates == 0)
-        {
-            std::cout << "Invalid captain name, ip address or port" << std::endl;
-            return;
-        }
+        // if(name.empty() || ip_address.empty() || port == 0 || num_of_crew_pirates == 0)
+        // {
+        //     std::cout << "Invalid captain name, ip address or port" << std::endl;
+        //     return;
+        // }
 
-        std::shared_ptr<Captain> captain = std::make_shared<Captain>(name, 
-                m_game_pirate_inventory, ip_address, port, num_of_crew_pirates);
         
-        
-        m_commander->AddCaptain();
-        m_captains.push_back(captain);
-        std::cout << "Captain " << name << " registered" << std::endl;
+        auto captain_details = m_server->AddCaptain();
+        std::shared_ptr<Captain> captain = std::make_shared<Captain>(captain_details.first,m_game_pirate_inventory ,captain_details.second);
+        m_captains[captain->GetName()] = captain;
+        std::cout << "Captain " << captain->GetName() << " registered" << std::endl;
     }   
 
 
@@ -102,20 +76,23 @@ namespace pirates_speed
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
-            m_commander->ShoutCommand(given_command);
-            CheckCorrectAnswer(given_command);
+            m_server->ShoutCommand(given_command);
+            std::thread thread(&Server::QueueAnswers, std::ref(m_server));
+            HandleAnswers(given_command);
+            thread.join();
         }
 
         PrintGameOver();
     }
 
-    bool Game::CheckIfGameIsOver()
+    bool Game::CheckIfGameIsOver() // check later for more efficiant solution
     {
-        for (auto & captain : m_captains)
+        for (auto &captain : m_captains)
         {
-            if (captain->IsWinner())
+            if (captain.second->IsWinner())
             {
-                m_winner = captain;
+                m_winner = captain.second;
+                m_server->EndGame();
                 return true;
             }
         }
@@ -132,9 +109,50 @@ namespace pirates_speed
         m_game_pirate_inventory.Add(role, pirate);
     }
 
-    void Game::CheckCorrectAnswer(const std::string &command)
+    void Game::HandleAnswers(const std::string &command)
     {
-        
+        std::shared_ptr<Answer> answer;
+        m_server->GetAnswer(answer);
+        bool correct = MakeCaptainHandleAnswer(answer->GetCaptainName(), answer, command);
+        if(correct)
+        {
+            m_server->EndRound();
+        }
+
+        else
+        {
+            m_server->SendMessageToCaptain(answer->GetCaptainName(), "Wrong answer\n");
+            std::string inventory = GetCaptainInventory(answer->GetCaptainName());
+            m_server->SendMessageToCaptain(answer->GetCaptainName(), inventory);
+        }
+    }
+
+    bool Game::MakeCaptainHandleAnswer(const std::string &captain_name, std::shared_ptr<Answer> answer, const std::string &command)
+    {
+       auto captain = m_captains[captain_name];
+       if(captain == nullptr)
+       {
+           std::cout << "Captain not found" << std::endl;
+           return false;
+       }
+       else
+       {
+           return captain->HandleAnswer(answer, command);
+       }
+
+    }
+
+    std::string Game::GetCaptainInventory(const std::string &captain_name)
+    {
+        auto captain = m_captains[captain_name];
+        if(captain == nullptr)
+        {
+            throw std::runtime_error("Captain not found");
+        }
+        else
+        {
+            return captain->GetInventoryString();
+        }
     }
 
 

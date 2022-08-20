@@ -2,7 +2,7 @@
 #include <thread>
 #include <condition_variable>
 #include <mutex>
-#include "commander.hpp"
+#include "server.hpp"
 #include "captain.hpp"
 #include "inventory.hpp"
 namespace pirates_speed
@@ -12,7 +12,7 @@ class Game
 {
     public:
         Game(const std::string & commander_name, int port, const std::string & ip_address);
-        ~Game();
+        ~Game() = default;
         Game(const Game&) = delete;
         Game& operator=(const Game&) = delete;
 
@@ -23,13 +23,14 @@ class Game
         void EndGame();
 
     private:
-        std::unique_ptr<Commander> m_commander;
-        std::vector<std::shared_ptr<Captain>> m_captains;
+        std::unique_ptr<Server> m_server;
+        std::string m_commander_name;
+        std::map<std::string, std::shared_ptr<Captain>> m_captains;
         std::shared_ptr<Captain> m_winner;
         Inventory<std::string, std::shared_ptr<CrewPirate>> m_game_pirate_inventory;
         std::mutex m_mutex;
         std::condition_variable m_condition_variable;
-        
+    
         bool CheckIfGameIsOver();
         void PrintGameOver();
         void RegisterCaptain();
@@ -37,7 +38,10 @@ class Game
         void ConnectCommanderToCaptain();
         void ConnectCaptainToCommander(std::shared_ptr<Captain> &captain);
         void ConnectCommanderAndCaptain(std::shared_ptr<Captain> &captain);
-        void CheckCorrectAnswer(const std::string &command);
+        void HandleAnswers(const std::string &command);
+
+        std::string GetCaptainInventory(const std::string &captain_name);
+        bool MakeCaptainHandleAnswer(const std::string &captain_name,std::shared_ptr<Answer> answer, const std::string &command);
 };
     
 } // namespace pirates_speed

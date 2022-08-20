@@ -7,11 +7,12 @@
 namespace pirates_speed
 {
 
+
     template <typename T>
     class WaitableQueue
     {
         public:
-            WaitableQueue() = default;
+            WaitableQueue();
             ~WaitableQueue() = default;
             WaitableQueue(const WaitableQueue&) = delete;
             WaitableQueue& operator=(const WaitableQueue&) = delete;
@@ -21,7 +22,7 @@ namespace pirates_speed
             bool Empty() const;
             size_t Size() const;
         private:
-            std::queue<T> m_queue;
+            std::priority_queue<T> m_queue;
             std::mutex m_mutex;
             std::condition_variable m_condition_variable;
     };

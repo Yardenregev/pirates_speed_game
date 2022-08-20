@@ -18,14 +18,23 @@ void CrewPirate::ExecuteCommand()
     m_command->Execute();
 }
 
-void CrewPirate::Print() const
+
+
+const std::string &CrewPirate::GetName() const
 {
-    std::cout << "Pirate: " << m_name << " Can " << m_command->GetCommandName();
+    return m_name;
 }
+
 
 const std::string &CrewPirate::GetCommandName() const
 {
     return m_command->GetCommandName();
+}
+
+std::string CrewPirate::ToString() const
+{
+    std::string str = "CrewPirate: " + GetName() + " Can " + GetCommandName();
+    return str;
 }
 
 void CrewPirate::SetCommand(std::shared_ptr<Command> command)

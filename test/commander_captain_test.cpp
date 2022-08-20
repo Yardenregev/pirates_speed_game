@@ -4,7 +4,7 @@ using namespace pirates_speed;
 
 void TestCommanderCaptain()
 {
-    Commander commander = Commander::GetInstance();
+    Server commander = Server::GetInstance();
     Captain captain(commander);
     Captain captain2(commander);
     Captain captain3(commander);

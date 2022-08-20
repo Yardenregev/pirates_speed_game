@@ -53,7 +53,12 @@
 			"typeinfo": "cpp",
 			"map": "cpp",
 			"cstring": "cpp",
-			"condition_variable": "cpp"
+			"condition_variable": "cpp",
+			"ctime": "cpp",
+			"chrono": "cpp",
+			"ratio": "cpp",
+			"mutex": "cpp",
+			"thread": "cpp"
 		}
 	}
 }
