@@ -40,7 +40,7 @@ namespace pirates_speed
         std::cout << ReceiveMessage() << std::endl;
     }
 
-    bool User::CheckGameOver(const std::string &message)
+    bool User::IsGameOver(const std::string &message)
     {
         if (message == "end_game")
         {
@@ -51,4 +51,20 @@ namespace pirates_speed
         return false;
     }
     
+
+    void User::StartGame()
+    {
+        std::string inventory = ReceiveMessage();
+        std::cout << inventory << std::endl;
+        std::string message = ReceiveMessage();
+        while(!IsGameOver(message))
+        {
+            std::cout << "Captain: " << message << std::endl;
+            size_t choice = 0;
+            std::cin >> choice;
+            SendMessage(std::to_string(choice));
+            ShowReply();
+            message = ReceiveMessage();
+        }
+    }
 } // namespace pirates_speed

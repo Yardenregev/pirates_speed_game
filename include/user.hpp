@@ -15,7 +15,8 @@ public:
     void SendMessage(const std::string &message);
     std::string ReceiveMessage();
     void ShowReply();
-    bool CheckGameOver(const std::string &message);
+    bool IsGameOver(const std::string &message);
+    void StartGame();
 
 private:
     TCPClient m_tcp_client;

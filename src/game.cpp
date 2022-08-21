@@ -73,6 +73,7 @@ namespace pirates_speed
         std::cout << "Game started" << std::endl;
         while (!CheckIfGameIsOver())
         {
+            SendInventoriesToAllCaptains();
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
@@ -95,6 +96,16 @@ namespace pirates_speed
             }
         }
         return false;
+    }
+
+    void Game::SendInventoriesToAllCaptains()
+    {
+        for (auto &captain : m_captains)
+        {
+            std::cout << "Captain " << captain.second->GetName() << std::endl;
+            std::string inventory_string = captain.second->GetInventoryString();
+            m_server.SendMessageToCaptain(captain.second->GetName(), inventory_string);
+        }
     }
 
     void Game::PrintGameOver()
@@ -120,8 +131,6 @@ namespace pirates_speed
         else
         {
             m_server.SendMessageToCaptain(answer->GetCaptainName(), "Wrong answer\n");
-            std::string inventory = GetCaptainInventory(answer->GetCaptainName());
-            m_server.SendMessageToCaptain(answer->GetCaptainName(), inventory);
         }
     }
 

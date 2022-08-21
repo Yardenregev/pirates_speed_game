@@ -39,7 +39,7 @@ class Game
         void ConnectCaptainToCommander(std::shared_ptr<Captain> &captain);
         void ConnectCommanderAndCaptain(std::shared_ptr<Captain> &captain);
         void HandleAnswers(const std::string &command);
-
+        void SendInventoriesToAllCaptains();
         std::string GetCaptainInventory(const std::string &captain_name);
         bool MakeCaptainHandleAnswer(const std::string &captain_name,std::shared_ptr<Answer> answer, const std::string &command);
 };

@@ -86,9 +86,10 @@ namespace pirates_speed
         m_tcp_dispatcher.SendMessageToAll("end_game");
     }
 
-    void Server::SendMessageToCaptain(const std::string &message, const std::string &captain_name)
+    void Server::SendMessageToCaptain(const std::string &captain_name, const std::string &message)
     {
-        m_tcp_dispatcher.SendMessageToClient(message, m_captain_sockets[captain_name]);
+        std::cout << "Sending message to captain " << captain_name << std::endl;
+        m_tcp_dispatcher.SendMessageToClient(message, m_captain_sockets.at(captain_name));
     }
 
 

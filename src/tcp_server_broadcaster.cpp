@@ -64,23 +64,5 @@ namespace pirates_speed
     }
 
 
-    // char *TCPServerBroadcaster::ReciveMessageFromLastClient()
-    // {
-    //     char *buffer = new char[1024];
-    //     if(recv(m_clients.back(), buffer, 1024, 0) == -1)
-    //     {
-    //         throw std::runtime_error("Error recieving message");
-    //     }
-    //     return buffer;
-    // }
-
-    // void TCPServerBroadcaster::SendMessageToLastClient(const std::string &message)
-    // {
-    //     if(send(m_clients.back(), message.c_str(), message.size(), 0) == -1)
-    //     {
-    //         throw std::runtime_error("Error sending message");
-    //     }
-    // }
-    
 } // namespace pirates_speed
     

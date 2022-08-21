@@ -18,7 +18,6 @@ namespace pirates_speed
             m_personal_inventory.Add(i,m_game_inventory.GetRandom());
         }
 
-        PrintInventory();
     }
     
 
@@ -39,24 +38,6 @@ namespace pirates_speed
         return m_name;
     }
 
-
-    void Captain::PrintInventory()
-    {
-        std::cout << "My Pirates: " << std::endl;
-        for (auto &pirate : m_personal_inventory)
-        {
-            std::cout << pirate.first << ":\t";
-        }
-
-        std::cout << std::endl;
-
-        for (auto &pirate : m_personal_inventory)
-        {
-            std::cout << pirate.second << "\t";
-        }
-
-        std::cout << std::endl;
-    }
 
 
     // void Captain::HandleInput(const std::string & given_command) // shouldn't be on captain responsibility to handle input, make captain only send the input and be processed by the server
