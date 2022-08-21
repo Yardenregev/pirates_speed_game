@@ -58,7 +58,16 @@
 			"chrono": "cpp",
 			"ratio": "cpp",
 			"mutex": "cpp",
-			"thread": "cpp"
+			"thread": "cpp",
+			"csignal": "cpp",
+			"bitset": "cpp",
+			"codecvt": "cpp",
+			"complex": "cpp",
+			"list": "cpp",
+			"set": "cpp",
+			"iomanip": "cpp",
+			"typeindex": "cpp",
+			"variant": "cpp"
 		}
 	}
 }

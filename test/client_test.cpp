@@ -14,7 +14,7 @@ void TestGame(const std::string & captain_name, size_t num_of_crew_pirates,
     user.Register();
     std::cout << "Registered" << std::endl;
     std::string message = user.ReceiveMessage();
-    while(user.CheckGameOver(message))
+    while(!user.CheckGameOver(message))
     {
         std::cout << "Captain: " << message << std::endl;
         size_t choice = 0;

@@ -20,7 +20,7 @@ class ThreadPool;
 void ThreadTask(ThreadPool &tp,size_t index);
 
 // how many threads in the pool    
-enum Priority {
+enum TaskPriority {
         FINISH,
         LOW,
         MEDIUM,
@@ -43,8 +43,10 @@ public:
     ~ThreadPool() noexcept;
 
     template <typename Y>
-    Future<Y> AddTask(const std::function<Y()>& task, Priority priority);
-    void AddTask(const std::function<void()>& task, Priority priority);
+    Future<Y> AddTask(const std::function<Y()>& task, TaskPriority priority);
+    void AddTask(const std::function<void()>& task, TaskPriority priority);
+    
+    
     void ResizePool(size_t);
     void Resume();
     void Pause(); // Stop Thread Assignment
@@ -62,7 +64,7 @@ private:
     std::vector<bool> m_vec_should_terminate;
 
 private:
-    void PoisonApple(Priority);
+    void PoisonApple(TaskPriority priority);
 
 private:
     class GeneralTask
@@ -80,7 +82,7 @@ private:
 
     public:
 
-        Task(const std::function<Y()>& task, Priority priority)
+        Task(const std::function<Y()>& task, TaskPriority priority)
             :m_task(task), m_priority(priority), m_is_valid(false)
             ,m_mutex(), m_cond_has_res()
         {
@@ -126,7 +128,7 @@ private:
         template <typename Z>
         friend Z& GetRes(ThreadPool::TemplatedTask<Z>& task);
         std::function<Y()> m_task;
-        Priority m_priority;
+        TaskPriority m_priority;
         bool m_is_valid;
         std::mutex m_mutex;
         std::condition_variable m_cond_has_res;
@@ -139,7 +141,7 @@ private:
         friend Z& GetRes(ThreadPool::TemplatedTask<Z>& task);
     public:
 
-        TemplatedTask(const std::function<Y()>& task, Priority priority)
+        TemplatedTask(const std::function<Y()>& task, TaskPriority priority)
             :Task<Y>(task, priority), m_result()
         {
             //empty
@@ -351,7 +353,7 @@ Y& GetRes(ThreadPool::TemplatedTask<Y>& task)
 // }
 
 template <typename Y>
-Future<Y> ThreadPool::AddTask(const std::function<Y()>& task, Priority priority)
+Future<Y> ThreadPool::AddTask(const std::function<Y()>& task, TaskPriority priority)
 {
     std::shared_ptr<ThreadPool::TemplatedTask<Y>> task_ = std::make_shared<ThreadPool::TemplatedTask<Y>>(task, priority);
     m_wqueue.Push(task_);

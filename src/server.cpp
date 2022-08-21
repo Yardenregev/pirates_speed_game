@@ -28,6 +28,8 @@ namespace pirates_speed
         std::cout << "Captain joined the game" << std::endl;
         auto captain_details = GetCaptainDetails(captain_socket);
         m_captain_sockets[captain_details.first] = captain_socket;
+        std::cout << "Captain socket: " << m_captain_sockets.at(captain_details.first) << std::endl;
+
         std::cout << "Captain " << captain_details.first << " joined the game" << std::endl;
         return captain_details;
     }
@@ -50,6 +52,7 @@ namespace pirates_speed
     {
         while(m_answered == false)
         {
+            std::cout << "Reading captain answers..." << std::endl;
             std::string answer = m_tcp_dispatcher.ReceiveMessageFromClient(captain_socket);
             std::string captain_name = answer.substr(0, answer.find("-"));
             std::string answer_text = answer.substr(answer.find("-") + 1);
@@ -60,7 +63,10 @@ namespace pirates_speed
 
     void Server::QueueAnswers()
     {
-        // for all sockets, threadpool add task ReadCaptainAnswers(socket)
+        for(auto &socket : m_captain_sockets)
+        {
+            m_thread_pool.AddTask(std::bind(&Server::ReadCaptainAnswers, this, socket.second),TaskPriority::LOW);
+        }
     }
 
     void Server::GetAnswer(std::shared_ptr<Answer> answer)

@@ -76,10 +76,8 @@ namespace pirates_speed
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
-            m_server.ShoutCommand(given_command);
-            std::thread thread(&Server::QueueAnswers, &m_server);
+            m_server.ShoutCommand(given_command);   
             HandleAnswers(given_command);
-            thread.join();
         }
 
         PrintGameOver();
