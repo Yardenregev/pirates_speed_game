@@ -28,8 +28,6 @@ class Game
         std::map<std::string, std::shared_ptr<Captain>> m_captains;
         std::shared_ptr<Captain> m_winner;
         Inventory<std::string, std::shared_ptr<CrewPirate>> m_game_pirate_inventory;
-        std::mutex m_mutex;
-        std::condition_variable m_condition_variable;
     
         bool CheckIfGameIsOver();
         void PrintGameOver();

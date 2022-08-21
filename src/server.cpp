@@ -48,16 +48,19 @@ namespace pirates_speed
     }
     
 
-    void Server::ReadCaptainAnswers(int captain_socket) // need thread pool to read from all sockets
+    void Server::ReadCaptainAnswers(int captain_socket)
     {
-        while(m_answered == false)
+        if (m_answered == false)
         {
             std::cout << "Reading captain answers..." << std::endl;
             std::string answer = m_tcp_dispatcher.ReceiveMessageFromClient(captain_socket);
+            if(m_answered)
+            {
+                return;
+            }
             std::string captain_name = answer.substr(0, answer.find("-"));
             std::string answer_text = answer.substr(answer.find("-") + 1);
-            Answer new_answer(captain_name, answer_text, Priority::ANSWER);
-            m_answers.Push(std::make_shared<Answer>(new_answer));
+            m_answers.Push(std::make_shared<Answer>(captain_name, answer_text));
         }
     }
 
@@ -69,7 +72,7 @@ namespace pirates_speed
         }
     }
 
-    void Server::GetAnswer(std::shared_ptr<Answer> answer)
+    void Server::GetAnswer(std::shared_ptr<Answer> &answer)
     {
         m_answers.Pop(answer);
     }
@@ -88,7 +91,6 @@ namespace pirates_speed
 
     void Server::SendMessageToCaptain(const std::string &captain_name, const std::string &message)
     {
-        std::cout << "Sending message to captain " << captain_name << std::endl;
         m_tcp_dispatcher.SendMessageToClient(message, m_captain_sockets.at(captain_name));
     }
 

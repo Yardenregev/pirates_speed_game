@@ -14,9 +14,7 @@ namespace pirates_speed
       m_commander_name(commander_name),
       m_captains(),
       m_winner(nullptr),
-      m_game_pirate_inventory(),
-      m_mutex(),
-      m_condition_variable()
+      m_game_pirate_inventory()
     {
         m_game_pirate_inventory.Add("Cleaner", std::dynamic_pointer_cast<CrewPirate>(std::make_shared<Cleaner>("Skippy")));
         m_game_pirate_inventory.Add("Cook", std::dynamic_pointer_cast<CrewPirate>(std::make_shared<Cook>("Salty")));
@@ -61,12 +59,6 @@ namespace pirates_speed
         RegisterCaptain();
     }
 
-    // void Game::AddCaptain(std::shared_ptr<Captain> captain)
-    // {
-    //     std::thread thread(&Commander::AddCaptain, m_commander, captain);
-        
-    //     thread.join();
-    // }
 
     void Game::StartGame()
     {
@@ -78,6 +70,7 @@ namespace pirates_speed
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
             m_server.ShoutCommand(given_command);   
+            m_server.QueueAnswers();
             HandleAnswers(given_command);
         }
 
@@ -102,7 +95,6 @@ namespace pirates_speed
     {
         for (auto &captain : m_captains)
         {
-            std::cout << "Captain " << captain.second->GetName() << std::endl;
             std::string inventory_string = captain.second->GetInventoryString();
             m_server.SendMessageToCaptain(captain.second->GetName(), inventory_string);
         }
@@ -122,6 +114,7 @@ namespace pirates_speed
     {
         std::shared_ptr<Answer> answer;
         m_server.GetAnswer(answer);
+        std::cout << "Answer "<< answer->GetAnswer() << std::endl;
         bool correct = MakeCaptainHandleAnswer(answer->GetCaptainName(), answer, command);
         if(correct)
         {

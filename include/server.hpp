@@ -23,7 +23,7 @@ namespace pirates_speed
             void SendInventoryToCaptain(const std::string &captain_name, const std::string & inventory);
             void SendMessageToCaptain(const std::string &captain_name, const std::string &message);
             void SendMessageToAll(const std::string &message);
-            void GetAnswer(std::shared_ptr<Answer> answer);
+            void GetAnswer(std::shared_ptr<Answer> &answer);
             void EndRound();
             void QueueAnswers();
             void EndGame();
