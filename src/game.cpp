@@ -146,15 +146,16 @@ namespace pirates_speed
 
     bool Game::MakeCaptainHandleAnswer(const std::string &captain_name, std::shared_ptr<Answer> answer, const std::string &command)
     {
-       auto captain = m_captains[captain_name];
-       if(captain == nullptr)
+       
+       auto captain = m_captains.find(captain_name);
+       if(captain == m_captains.end())
        {
            std::cout << "Captain not found" << std::endl;
            return false;
        }
        else
        {
-           return captain->HandleAnswer(answer, command);
+           return captain->second->HandleAnswer(answer, command);
        }
     }
 
