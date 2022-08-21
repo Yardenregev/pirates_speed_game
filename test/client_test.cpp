@@ -28,7 +28,7 @@ void TestGame(const std::string & captain_name, size_t num_of_crew_pirates,
 
 int main ()
 {
-    std::string captain_name = "Captain";
+    std::string captain_name = "Amir";
     size_t num_of_crew_pirates = 3;
     std::string ip_address = "10.10.0.151";
     int port = 8080;
