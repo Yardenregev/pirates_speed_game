@@ -10,12 +10,11 @@
 namespace pirates_speed
 {
 
-    // class Commander : public Dispatcher<const std::string &>
+
     class Server
     {
         public :
-            // static Commander & GetInstance();
-            // static Commander & GetInstance(const std::string & name, int port, const std::string & ip_address);
+
             Server(int port, const std::string & ip_address);
         public:
             std::pair<std::string,size_t> AddCaptain();
