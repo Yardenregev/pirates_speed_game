@@ -23,7 +23,7 @@ class Game
         void EndGame();
 
     private:
-        std::unique_ptr<Server> m_server;
+        Server m_server;
         std::string m_commander_name;
         std::map<std::string, std::shared_ptr<Captain>> m_captains;
         std::shared_ptr<Captain> m_winner;

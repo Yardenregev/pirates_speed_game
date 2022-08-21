@@ -10,7 +10,7 @@ namespace pirates_speed
 {
 
     Game::Game(const std::string & commander_name, int port, const std::string & ip_address)
-    : m_server(new Server(port, ip_address)),
+    : m_server(port, ip_address),
       m_commander_name(commander_name),
       m_captains(),
       m_winner(nullptr),
@@ -48,7 +48,7 @@ namespace pirates_speed
         // }
 
         
-        auto captain_details = m_server->AddCaptain();
+        auto captain_details = m_server.AddCaptain();
         std::shared_ptr<Captain> captain = std::make_shared<Captain>(captain_details.first,m_game_pirate_inventory ,captain_details.second);
         m_captains[captain->GetName()] = captain;
         std::cout << "Captain " << captain->GetName() << " registered" << std::endl;
@@ -76,8 +76,8 @@ namespace pirates_speed
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
-            m_server->ShoutCommand(given_command);
-            std::thread thread(&Server::QueueAnswers, std::ref(m_server));
+            m_server.ShoutCommand(given_command);
+            std::thread thread(&Server::QueueAnswers, &m_server);
             HandleAnswers(given_command);
             thread.join();
         }
@@ -92,7 +92,7 @@ namespace pirates_speed
             if (captain.second->IsWinner())
             {
                 m_winner = captain.second;
-                m_server->EndGame();
+                m_server.EndGame();
                 return true;
             }
         }
@@ -112,18 +112,18 @@ namespace pirates_speed
     void Game::HandleAnswers(const std::string &command)
     {
         std::shared_ptr<Answer> answer;
-        m_server->GetAnswer(answer);
+        m_server.GetAnswer(answer);
         bool correct = MakeCaptainHandleAnswer(answer->GetCaptainName(), answer, command);
         if(correct)
         {
-            m_server->EndRound();
+            m_server.EndRound();
         }
 
         else
         {
-            m_server->SendMessageToCaptain(answer->GetCaptainName(), "Wrong answer\n");
+            m_server.SendMessageToCaptain(answer->GetCaptainName(), "Wrong answer\n");
             std::string inventory = GetCaptainInventory(answer->GetCaptainName());
-            m_server->SendMessageToCaptain(answer->GetCaptainName(), inventory);
+            m_server.SendMessageToCaptain(answer->GetCaptainName(), inventory);
         }
     }
 
