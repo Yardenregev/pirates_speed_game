@@ -1,5 +1,6 @@
 #include "../include/tcp_client.hpp"
 #include <stdexcept>
+#include <cstring>
 
 namespace pirates_speed
 {
@@ -16,6 +17,17 @@ namespace pirates_speed
         {
             throw std::runtime_error("Error connecting to server");
         }
+    }
+    std::string TCPClient::ReceiveMessage()
+    {
+        char buffer[1024] = {0};
+        memset(buffer, 0, sizeof(buffer));
+        int bytes_received = recv(m_socket, buffer, sizeof(buffer), 0);
+        if(bytes_received == -1)
+        {
+            throw std::runtime_error("Error receiving message");
+        }
+        return std::string(buffer);
     }
     
 } // namespace pirates_speed

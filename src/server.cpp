@@ -15,7 +15,8 @@ namespace pirates_speed
     Server::Server(int port, const std::string & ip_address)
         : m_tcp_dispatcher(port, ip_address),
           m_captain_sockets(),
-          answers(),
+          m_answers(),
+          m_thread_pool(),
           m_answered(false)
     {
     }
@@ -45,28 +46,33 @@ namespace pirates_speed
     }
     
 
-    void Server::QueueAnswers()
+    void Server::ReadCaptainAnswers(int captain_socket) // need thread pool to read from all sockets
     {
         while(m_answered == false)
         {
-            std::string answer = m_tcp_dispatcher.ReceiveMessage();
+            std::string answer = m_tcp_dispatcher.ReceiveMessageFromClient(captain_socket);
             std::string captain_name = answer.substr(0, answer.find("-"));
             std::string answer_text = answer.substr(answer.find("-") + 1);
             Answer new_answer(captain_name, answer_text, Priority::ANSWER);
-            answers.Push(std::make_shared<Answer>(new_answer));
+            m_answers.Push(std::make_shared<Answer>(new_answer));
         }
+    }
+
+    void Server::QueueAnswers()
+    {
+        // for all sockets, threadpool add task ReadCaptainAnswers(socket)
     }
 
     void Server::GetAnswer(std::shared_ptr<Answer> answer)
     {
-        answers.Pop(answer);
+        m_answers.Pop(answer);
     }
 
     void Server::EndRound()
     {
         m_answered = true;
         m_tcp_dispatcher.SendMessageToAll("end_round");
-        answers.Push(std::make_shared<Answer>("", "end_round", Priority::END_ROUND));
+        m_answers.Push(std::make_shared<Answer>("", "end_round", Priority::END_ROUND));
     }
 
     void Server::EndGame()

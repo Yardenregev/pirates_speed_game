@@ -16,7 +16,6 @@ public:
 
     int GetSocket() const;
 
-    std::string ReceiveMessage();
     void SendMessage(const std::string &message);
 
 protected:

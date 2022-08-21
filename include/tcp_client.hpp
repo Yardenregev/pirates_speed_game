@@ -7,6 +7,7 @@ class TCPClient : public TCPComponent
 {
 public:
     TCPClient(int port, const std::string & ip_address);
+    std::string ReceiveMessage();
     void Connect();
 };
     
