@@ -56,7 +56,7 @@ namespace pirates_speed
             m_server.ClearAnswerQueue();
         }
 
-        PrintGameOver();
+        SendGameOver();
     }
 
     bool Game::CheckIfGameIsOver() // check later for more efficiant solution
@@ -83,9 +83,12 @@ namespace pirates_speed
         }
     }
 
-    void Game::PrintGameOver()
+    void Game::SendGameOver()
     {
-        std::cout << "Game over! The winner is: " << m_winner->GetName() << std::endl;
+        std::string game_over_msg = "Game over-";
+        game_over_msg += "winner is " + m_winner->GetName();
+        game_over_msg += "\n";
+        m_server.SendMessageToAll(game_over_msg);
     }
 
     void Game::AddPirateToGameInventory(const std::string &role, std::shared_ptr<CrewPirate> pirate)

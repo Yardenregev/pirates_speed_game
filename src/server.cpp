@@ -61,6 +61,7 @@ namespace pirates_speed
             }
             std::string captain_name = answer.substr(0, answer.find("-"));
             std::string answer_text = answer.substr(answer.find("-") + 1);
+            
             m_answers.Push(std::make_shared<Answer>(captain_name, answer_text));
         }
     }
@@ -89,7 +90,6 @@ namespace pirates_speed
     {
         // m_tcp_dispatcher.SendMessageToAll("end_game");
         EndRound();
-        SendMessageToAll("end_game");
     }
 
     void Server::SendMessageToCaptain(const std::string &captain_name, const std::string &message)

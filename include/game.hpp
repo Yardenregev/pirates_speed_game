@@ -30,7 +30,7 @@ class Game
         Inventory<std::string, std::shared_ptr<CrewPirate>> m_game_pirate_inventory;
     
         bool CheckIfGameIsOver();
-        void PrintGameOver();
+        void SendGameOver();
         void RegisterCaptain();
         void AddPirateForAllButCorrectCaptain(const std::string & correct_captain_name);
         
