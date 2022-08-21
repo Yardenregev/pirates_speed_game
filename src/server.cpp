@@ -24,15 +24,16 @@ namespace pirates_speed
     {
         std::cout << "Waiting for captain to join the game..." << std::endl;
         int captain_socket = m_tcp_dispatcher.AddClient();
-        auto captain_details = GetCaptainDetails();
+        std::cout << "Captain joined the game" << std::endl;
+        auto captain_details = GetCaptainDetails(captain_socket);
         m_captain_sockets[captain_details.first] = captain_socket;
         std::cout << "Captain " << captain_details.first << " joined the game" << std::endl;
         return captain_details;
     }
 
-    std::pair<std::string,size_t> Server::GetCaptainDetails()
+    std::pair<std::string,size_t> Server::GetCaptainDetails(int captain_socket)
     {
-        std::string user_details = m_tcp_dispatcher.ReceiveMessage();
+        std::string user_details = m_tcp_dispatcher.ReceiveMessageFromClient(captain_socket);
         std::string captain_name = user_details.substr(0, user_details.find("-"));
         std::string num_of_pirates = user_details.substr(user_details.find("-") + 1);
         return std::make_pair(captain_name, std::stoi(num_of_pirates));

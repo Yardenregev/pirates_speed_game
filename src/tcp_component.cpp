@@ -36,7 +36,7 @@ namespace pirates_speed
 
     std::string TCPComponent::ReceiveMessage()
     {
-        char buffer[1024];
+        char buffer[1024] = {0};
         memset(buffer, 0, sizeof(buffer));
         int bytes_received = recv(m_socket, buffer, sizeof(buffer), 0);
         if(bytes_received == -1)

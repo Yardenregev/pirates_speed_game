@@ -12,6 +12,7 @@ namespace pirates_speed
     void User::Register()
     {
         m_tcp_client.Connect();
+        std::cout << "Connected to server" << std::endl;
         SendUserDetails();
     }
 

@@ -29,7 +29,7 @@ namespace pirates_speed
 
         private:
             bool CheckEndRound(const std::string &answer);
-            std::pair<std::string,size_t> GetCaptainDetails();
+            std::pair<std::string,size_t> GetCaptainDetails(int captain_socket);
             
         private:
             TCPServerBroadcaster m_tcp_dispatcher;

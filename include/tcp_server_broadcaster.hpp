@@ -11,7 +11,7 @@ public:
     int AddClient();
     void SendMessageToAll(const std::string &message);
     void SendMessageToClient(const std::string &message, int client_socket);
-    std::string ReciveMessageFromClient(int client_socket);
+    std::string ReceiveMessageFromClient(int client_socket);
     
 private:
     std::vector<int> m_clients;

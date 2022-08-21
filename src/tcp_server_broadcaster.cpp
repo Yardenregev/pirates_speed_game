@@ -1,6 +1,6 @@
 #include "../include/tcp_server_broadcaster.hpp"
 #include <stdexcept>
-
+#include <iostream>/*std cout cin*/
 namespace pirates_speed
 {
 
@@ -51,9 +51,10 @@ namespace pirates_speed
         }
     }
 
-    std::string TCPServerBroadcaster::ReciveMessageFromClient(int client_socket)
+    std::string TCPServerBroadcaster::ReceiveMessageFromClient(int client_socket)
     {
         char buffer[1024] = {0};
+        std::cout<<"Receiving message from client"<<std::endl;
         if(recv(client_socket, buffer, 1024, 0) == -1)
         {
             throw std::runtime_error("Error recieving message from client");

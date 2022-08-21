@@ -6,13 +6,13 @@ using namespace pirates_speed;
 void TestGame(const std::string & captain_name, size_t num_of_crew_pirates,
               const std::string & ip_address, int port)
 {
-    // TCPClient tcp_client(8080,"10.10.0.151");
-    // tcp_client.Connect();
+
 
 
     User user(captain_name, num_of_crew_pirates, ip_address, port);
 
     user.Register();
+    std::cout << "Registered" << std::endl;
     std::string message = user.ReceiveMessage();
     while(user.CheckGameOver(message))
     {
@@ -26,14 +26,14 @@ void TestGame(const std::string & captain_name, size_t num_of_crew_pirates,
 
 }
 
-int main (int argc, char *argv[])
+int main ()
 {
-    std::string name = argv[1];
-    size_t num_of_pirates = std::stoi(argv[2]);
-    std::string ip_address = argv[3];
-    int port = std::stoi(argv[4]);
+    std::string captain_name = "Captain";
+    size_t num_of_crew_pirates = 3;
+    std::string ip_address = "10.10.0.151";
+    int port = 8080;
 
-    TestGame(name, num_of_pirates, ip_address, port);
+    TestGame(captain_name, num_of_crew_pirates, ip_address, port);
 
 
 
