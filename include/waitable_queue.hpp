@@ -103,6 +103,16 @@ void WaitableQueue<T,Q>::PopTopElement(T& _element)
 }
 
 
+template <typename T, typename Q>
+void WaitableQueue<T,Q>::Clear()
+{
+    std::unique_lock<std::mutex> lock(m_mutex);
+    while(!m_queue.empty())
+    {
+        m_queue.pop();
+    }
+}
+
 } // namespace ilrd
 
 

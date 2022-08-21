@@ -19,6 +19,7 @@ namespace pirates_speed
         public:
             const std::string & GetAnswer() const;
             const std::string & GetCaptainName() const;
+            Priority GetPriority() const;
             bool operator<(const Answer& other) const;
 
         private:

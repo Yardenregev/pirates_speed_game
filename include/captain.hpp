@@ -25,6 +25,7 @@ namespace pirates_speed
             // void ConnectCommander();
             bool HandleAnswer(std::shared_ptr<Answer> answer, const std::string &command);
             std::string GetInventoryString();
+            void AddRandomPirate();
         private:
             const Inventory<std::string,std::shared_ptr<CrewPirate>> &m_game_inventory;
             std::string m_name;
@@ -33,6 +34,5 @@ namespace pirates_speed
             // TCPClient m_tcp_client;
             void PrintInventory();
             void HandleInput(const std::string &given_command);
-            void AddRandomPirate();
     };
 } // namespace pirates_speed

@@ -26,26 +26,7 @@ namespace pirates_speed
 
 
     void Game::RegisterCaptain()
-    {
-        // int port;
-        // std::string ip_address;
-        // size_t num_of_crew_pirates;
-        // std::cout << "Enter captain name: ";
-        // std::cin >> name;
-        // std::cout << "Enter captain port: ";
-        // std::cin >> port;
-        // std::cout << "Enter captain ip address: ";
-        // std::cin >> ip_address;
-        // std::cout << "Enter captain number of crew pirates: ";
-        // std::cin >> num_of_crew_pirates;
-
-        // if(name.empty() || ip_address.empty() || port == 0 || num_of_crew_pirates == 0)
-        // {
-        //     std::cout << "Invalid captain name, ip address or port" << std::endl;
-        //     return;
-        // }
-
-        
+    {   
         auto captain_details = m_server.AddCaptain();
         std::shared_ptr<Captain> captain = std::make_shared<Captain>(captain_details.first,m_game_pirate_inventory ,captain_details.second);
         m_captains[captain->GetName()] = captain;
@@ -72,6 +53,7 @@ namespace pirates_speed
             m_server.ShoutCommand(given_command);   
             m_server.QueueAnswers();
             HandleAnswers(given_command);
+            m_server.ClearAnswerQueue();
         }
 
         PrintGameOver();
@@ -96,6 +78,7 @@ namespace pirates_speed
         for (auto &captain : m_captains)
         {
             std::string inventory_string = captain.second->GetInventoryString();
+            std::cout << "Sending inventory to Captain " << captain.second->GetName() << std::endl;
             m_server.SendMessageToCaptain(captain.second->GetName(), inventory_string);
         }
     }
@@ -114,16 +97,47 @@ namespace pirates_speed
     {
         std::shared_ptr<Answer> answer;
         m_server.GetAnswer(answer);
-        std::cout << "Answer "<< answer->GetAnswer() << std::endl;
-        bool correct = MakeCaptainHandleAnswer(answer->GetCaptainName(), answer, command);
-        if(correct)
+        std::string correct_captain_name = "";
+        size_t answer_count = 1;
+        while(answer->GetPriority() != Priority::END_ROUND)
         {
-            m_server.EndRound();
+            bool correct = MakeCaptainHandleAnswer(answer->GetCaptainName(), answer, command);
+            if(correct)
+            {
+                correct_captain_name = answer->GetCaptainName();
+                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Correct answer\n");
+                break;
+            }
+
+            else
+            {
+                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Wrong answer\n");
+            }
+            
+            if (answer_count == m_captains.size())
+            {
+                break;
+            }
+
+            m_server.GetAnswer(answer);
+            answer_count++;
         }
 
-        else
+
+        AddPirateForAllButCorrectCaptain(correct_captain_name);
+
+        m_server.EndRound();
+    }
+
+
+    void Game::AddPirateForAllButCorrectCaptain(const std::string &correct_captain_name)
+    {
+        for (auto &captain : m_captains)
         {
-            m_server.SendMessageToCaptain(answer->GetCaptainName(), "Wrong answer\n");
+            if(captain.second->GetName() != correct_captain_name)
+            {
+                captain.second->AddRandomPirate();
+            }
         }
     }
 
@@ -139,7 +153,6 @@ namespace pirates_speed
        {
            return captain->HandleAnswer(answer, command);
        }
-
     }
 
     std::string Game::GetCaptainInventory(const std::string &captain_name)

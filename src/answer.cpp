@@ -23,5 +23,10 @@ namespace pirates_speed
     {
         return m_priority < other.m_priority;
     }
+
+    Priority Answer::GetPriority() const
+    {
+        return m_priority;
+    }
     
 } // namespace pirates_speed

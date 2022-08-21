@@ -13,9 +13,9 @@ void ThreadTask(ThreadPool &tp, size_t index)
                 return;
             }
         }
-        char buffer[100] = {0};
-        sprintf(buffer, "Thread %ld\n", index);
-        write(1, buffer, strlen(buffer));
+        // char buffer[100] = {0};
+        // sprintf(buffer, "Thread %ld\n", index);
+        // write(1, buffer, strlen(buffer));
         std::unique_lock<std::mutex> lock(tp.m_mutex_can_pop);
         std::shared_ptr<ThreadPool::GeneralTask> task_ = 
                     std::make_shared<ThreadPool::Task<int>>([]{return 0;}, LOW);

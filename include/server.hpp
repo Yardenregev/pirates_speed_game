@@ -26,6 +26,7 @@ namespace pirates_speed
             void EndRound();
             void QueueAnswers();
             void EndGame();
+            void ClearAnswerQueue();
 
         private:
             bool CheckEndRound(const std::string &answer);

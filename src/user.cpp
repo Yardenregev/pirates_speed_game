@@ -59,12 +59,14 @@ namespace pirates_speed
         while(!IsGameOver(inventory) || !IsGameOver(message))
         {
             std::cout << inventory << std::endl;
+            std::cout << "Waiting for command from captain..." << std::endl;
             message = ReceiveMessage();
             std::cout << "Captain: " << message << std::endl;
             size_t choice = 0;
             std::cin >> choice;
             SendMessage(std::to_string(choice));
-            ShowReply();
+            std::string reply = ReceiveMessage();
+            std::cout << "Reply: " << reply << std::endl;
             inventory = ReceiveMessage();
         }
     }

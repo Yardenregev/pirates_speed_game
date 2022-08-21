@@ -32,6 +32,8 @@ class Game
         bool CheckIfGameIsOver();
         void PrintGameOver();
         void RegisterCaptain();
+        void AddPirateForAllButCorrectCaptain(const std::string & correct_captain_name);
+        
 
         void ConnectCommanderToCaptain();
         void ConnectCaptainToCommander(std::shared_ptr<Captain> &captain);

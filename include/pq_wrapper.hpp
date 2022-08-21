@@ -11,7 +11,6 @@ public:
     using std::priority_queue<T>::pop;
     using std::priority_queue<T>::empty;
     using std::priority_queue<T>::push;
-
     const T& front(){ return std::priority_queue<T>::top(); }
 };
 

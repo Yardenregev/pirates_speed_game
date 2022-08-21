@@ -78,7 +78,7 @@ namespace pirates_speed
             }
         }
 
-        AddRandomPirate();
+        // AddRandomPirate();
 
         return false;
     }

@@ -56,6 +56,7 @@ namespace pirates_speed
             std::string answer = m_tcp_dispatcher.ReceiveMessageFromClient(captain_socket);
             if(m_answered)
             {
+                std::cout<<"answered, closing thread" << std::endl;
                 return;
             }
             std::string captain_name = answer.substr(0, answer.find("-"));
@@ -66,6 +67,7 @@ namespace pirates_speed
 
     void Server::QueueAnswers()
     {
+        m_answered = false;
         for(auto &socket : m_captain_sockets)
         {
             m_thread_pool.AddTask(std::bind(&Server::ReadCaptainAnswers, this, socket.second),TaskPriority::LOW);
@@ -80,18 +82,29 @@ namespace pirates_speed
     void Server::EndRound()
     {
         m_answered = true;
-        m_tcp_dispatcher.SendMessageToAll("end_round");
-        m_answers.Push(std::make_shared<Answer>("", "end_round", Priority::END_ROUND));
+        m_answers.Push(std::make_shared<Answer>("end_round", "end_round",Priority::END_ROUND));
     }
 
     void Server::EndGame()
     {
-        m_tcp_dispatcher.SendMessageToAll("end_game");
+        // m_tcp_dispatcher.SendMessageToAll("end_game");
+        EndRound();
+        SendMessageToAll("end_game");
     }
 
     void Server::SendMessageToCaptain(const std::string &captain_name, const std::string &message)
     {
         m_tcp_dispatcher.SendMessageToClient(message, m_captain_sockets.at(captain_name));
+    }
+
+    void Server::ClearAnswerQueue()
+    {
+        m_answers.Clear();
+    }
+
+    void Server::SendMessageToAll(const std::string &message)
+    {
+        m_tcp_dispatcher.SendMessageToAll(message);
     }
 
 
