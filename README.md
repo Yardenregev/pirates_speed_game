@@ -20,6 +20,8 @@ The game is played by minimum of two players, the commander and the captain.
 When multiple messages are send before receiving, the game will read all of them
 as one message. Can and will be fixed by some seperator between the messages.
 
+## Depenedencies
+This game is compiled with g++
 
 ## How To Play
 1. in the 'pirates_speed_game' folder, run the following command in the commander computer:
