@@ -13,9 +13,6 @@ get rid of the pirate.
 
 The winning captain is the first captain to have no pirates on the ship.
 
-## Known Bugs 🐛
-The game has some undefined behavior when it comes to the synchronization of the
-game.
 
 ## Depenedencies 📦
 This game is compiled with g++
