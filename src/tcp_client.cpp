@@ -18,6 +18,7 @@ namespace pirates_speed
             throw std::runtime_error("Error connecting to server");
         }
     }
+    
     std::string TCPClient::ReceiveMessage()
     {
         char buffer[1024] = {0};

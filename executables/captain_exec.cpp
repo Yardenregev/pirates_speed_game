@@ -24,9 +24,9 @@ int main ()
     std::string captain_ip_address;
     std::cout << "Enter captain name: ";
     std::cin >> captain_name;
-    std::cout << "Enter captain port: ";
+    std::cout << "Enter game port: ";
     std::cin >> captain_port;
-    std::cout << "Enter captain ip address: ";
+    std::cout << "Enter game ip address: ";
     std::cin >> captain_ip_address;
 
     if(captain_name.empty() || captain_ip_address.empty() || captain_port == 0)

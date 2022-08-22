@@ -53,8 +53,8 @@ make captain
 ```
 
 6. Enter your name, port for the game to be played and commander computer ip address.
-   The port must be the same as entered in the commander computer.
+   The port and ip must be the same as entered in the commander computer.
 
-    For example: "Jack Sparrow" "8080" "10.10.0.625"
+    For example: "Jack Sparrow" "8080" "10.10.0.197"
 
 7. The game will start.

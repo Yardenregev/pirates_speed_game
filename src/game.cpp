@@ -127,7 +127,7 @@ namespace pirates_speed
         }
 
 
-        AddPirateForAllButCorrectCaptain(correct_captain_name);
+        // AddPirateForAllButCorrectCaptain(correct_captain_name); // feature not working all the time
 
         m_server.EndRound();
     }
