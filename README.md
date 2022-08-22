@@ -1,6 +1,6 @@
 # Pirates Speed Game
 
-## Game Rules
+## Game Rules 📃
 The players split into commander and captain,
 the commander manages the game and the captain plays the game.
 
@@ -13,17 +13,14 @@ get rid of the pirate.
 
 The winning captain is the first captain to have no pirates on the ship.
 
-## Game Play
-The game is played by minimum of two players, the commander and the captain.
+## Known Bugs 🐛
+The game has some undefined behavior when it comes to the synchronization of the
+game.
 
-## Known Bugs
-When multiple messages are send before receiving, the game will read all of them
-as one message. Can and will be fixed by some seperator between the messages.
-
-## Depenedencies
+## Depenedencies 📦
 This game is compiled with g++
 
-## How To Play
+## How To Run 🚀
 1. in the 'pirates_speed_game' folder, run the following command in the commander computer:
 
 ```bash
@@ -44,9 +41,9 @@ make captain
 
 4. Enter your name, port for the game to be played and commander computer ip address.
 
-    For example: "Moby Dick" "8080" "10.10.0.197"
+>   For example: "Moby Dick" "8080" "10.10.0.197"
 
-5. Run the captain executable in the captain computer.
+5. When choosing 'Add Captain', run the captain executable in the captain computer.
 
 ```bash
 ./captain.out
@@ -55,6 +52,24 @@ make captain
 6. Enter your name, port for the game to be played and commander computer ip address.
    The port and ip must be the same as entered in the commander computer.
 
-    For example: "Jack Sparrow" "8080" "10.10.0.197"
+>   For example: "Jack Sparrow" "8080" "10.10.0.197"
 
-7. The game will start.
+7. Choose 'Start Game' to start the game.
+
+## Playing The Game 🎮
+
+The game is played by minimum of two players, the commander and the captain.
+
+All captains are showed which pirates they have and what command they can perform.
+
+The commander first has to shout what command he wants executed.
+After the command is shouted, the captain will be able to send a pirate index to the commander.
+
+>   For example: "Shout 'Defend' and send pirate index 0"
+
+If the pirate is able to perform the command, the captain will be rid of the pirate.
+
+
+###   Remember, First captain to get rid of all his pirates is the winner.
+
+
