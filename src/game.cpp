@@ -1,5 +1,4 @@
 #include "../include/game.hpp"
-#include "../include/design_patterns/singleton.hpp"
 #include <iostream>/*std cout cin*/
 #include "../include/pirate_types/pirate_types.hpp"
 #include <memory>

@@ -1,5 +1,4 @@
 #include "../include/server.hpp"
-#include "../include/design_patterns/singleton.hpp"
 #include <iostream>/*std cout cin*/
 #include "../include/threadpool.hpp"
 
@@ -56,7 +55,6 @@ namespace pirates_speed
             std::string answer = m_tcp_dispatcher.ReceiveMessageFromClient(captain_socket);
             if(m_answered)
             {
-                // std::cout<<"answered, closing thread" << std::endl;
                 return;
             }
             std::string captain_name = answer.substr(0, answer.find("-"));
@@ -91,7 +89,6 @@ namespace pirates_speed
 
     void Server::EndGame()
     {
-        // m_tcp_dispatcher.SendMessageToAll("end_game");
         EndRound();
     }
 

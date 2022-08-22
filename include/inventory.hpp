@@ -113,7 +113,6 @@ bool Inventory<KEY, TYPE>::IsEmpty() const
 template <typename KEY, typename TYPE>
 bool Inventory<KEY, TYPE>::Contains(KEY key) const
 {
-    // return if inventory has a pirate with key key
     return m_inventory.find(key) != m_inventory.end();
 
 }

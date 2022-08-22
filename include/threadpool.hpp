@@ -18,7 +18,6 @@ namespace pirates_speed
 class ThreadPool;
 void ThreadTask(ThreadPool &tp,size_t index);
 
-// how many threads in the pool    
 enum TaskPriority {
         FINISH,
         LOW,
