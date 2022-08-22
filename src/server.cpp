@@ -1,6 +1,7 @@
 #include "../include/server.hpp"
 #include "../include/design_patterns/singleton.hpp"
 #include <iostream>/*std cout cin*/
+#include "../include/threadpool.hpp"
 
 
 namespace pirates_speed
@@ -16,7 +17,6 @@ namespace pirates_speed
         : m_tcp_dispatcher(port, ip_address),
           m_captain_sockets(),
           m_answers(),
-          m_thread_pool(),
           m_answered(false)
     {
     }
@@ -56,7 +56,7 @@ namespace pirates_speed
             std::string answer = m_tcp_dispatcher.ReceiveMessageFromClient(captain_socket);
             if(m_answered)
             {
-                std::cout<<"answered, closing thread" << std::endl;
+                // std::cout<<"answered, closing thread" << std::endl;
                 return;
             }
             std::string captain_name = answer.substr(0, answer.find("-"));
@@ -69,10 +69,12 @@ namespace pirates_speed
     void Server::QueueAnswers()
     {
         m_answered = false;
+        ThreadPool tp;
         for(auto &socket : m_captain_sockets)
         {
-            m_thread_pool.AddTask(std::bind(&Server::ReadCaptainAnswers, this, socket.second),TaskPriority::LOW);
+            tp.AddTask(std::bind(&Server::ReadCaptainAnswers, this, socket.second),TaskPriority::LOW);
         }
+        std::cout << "Waiting for answers..." << std::endl;
     }
 
     void Server::GetAnswer(std::shared_ptr<Answer> &answer)

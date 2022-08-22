@@ -65,7 +65,7 @@ All captains are showed which pirates they have and what command they can perfor
 The commander first has to shout what command he wants executed.
 After the command is shouted, the captain will be able to send a pirate index to the commander.
 
->   For example: "Shout 'Defend' and send pirate index 0"
+>   For example: commander: "Defend" captain: "1"
 
 If the pirate is able to perform the command, the captain will be rid of the pirate.
 
