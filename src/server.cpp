@@ -66,6 +66,7 @@ namespace pirates_speed
         }
     }
 
+
     void Server::QueueAnswers()
     {
         m_answered = false;

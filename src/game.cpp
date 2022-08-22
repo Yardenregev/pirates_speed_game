@@ -5,6 +5,7 @@
 #include <memory>
 #include "../include/threadpool.hpp"
 
+#include <unordered_set>
 
 
 namespace pirates_speed
@@ -49,6 +50,7 @@ namespace pirates_speed
         {
             SendInventoriesToAllCaptains();
             ReceiveFromAll();
+            std::cout << "All recieved inventories" << std::endl;
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
@@ -105,19 +107,22 @@ namespace pirates_speed
         m_server.GetAnswer(answer);
         std::string correct_captain_name = "";
         size_t answer_count = 1;
+        std::unordered_set<std::string> answered_captains;
         while(answer->GetPriority() != Priority::END_ROUND)
         {
             bool correct = MakeCaptainHandleAnswer(answer->GetCaptainName(), answer, command);
+            answered_captains.insert(answer->GetCaptainName());
             if(correct)
             {
+                m_server.EndRound();
                 correct_captain_name = answer->GetCaptainName();
-                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Correct answer\n");
+                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Correct Answer\n");
                 break;
             }
 
             else
             {
-                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Too bad\n");
+                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Wrong Answer\n");
             }
             
             if (answer_count == m_captains.size())
@@ -129,6 +134,13 @@ namespace pirates_speed
             answer_count++;
         }
 
+        for(auto &captain : m_captains)
+        {
+            if(answered_captains.find(captain.second->GetName()) == answered_captains.end())
+            {
+                m_server.SendMessageToCaptain(captain.second->GetName(), "Too Slow\n");
+            }
+        }
 
         // AddPirateForAllButCorrectCaptain(correct_captain_name); // feature not working all the time
 
@@ -153,6 +165,7 @@ namespace pirates_speed
        {
             return false;
        }
+
        auto captain = m_captains.find(captain_name);
        if(captain == m_captains.end())
        {

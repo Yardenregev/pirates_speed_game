@@ -62,8 +62,8 @@ namespace pirates_speed
             std::cin >> choice;
             SendMessage(std::to_string(choice));
             std::string reply = ReceiveMessage();
-            SendMessage("end_round");
             std::cout << "Reply: " << reply << std::endl;
+            SendMessage("end_round");
             inventory = ReceiveMessage();
         }
 
