@@ -109,6 +109,25 @@ namespace pirates_speed
         m_tcp_dispatcher.SendMessageToAll(message);
     }
 
+    void Server::ReceiveFromCaptain(const std::string &captain_name)
+    {
+        m_tcp_dispatcher.ReceiveMessageFromClient(m_captain_sockets.at(captain_name));
+    }
+
+    void Server::ReceiveFromAll()
+    {
+        ThreadPool tp;
+        for(auto &socket : m_captain_sockets)
+        {
+            tp.AddTask(std::bind(&Server::ReceiveFromCaptain, this, socket.first),TaskPriority::LOW);
+        }
+    }
+
+    bool Server::IsAnswered()
+    {
+        return m_answered;
+    }
+
 
     
 

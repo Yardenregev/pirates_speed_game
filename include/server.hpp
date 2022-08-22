@@ -26,11 +26,14 @@ namespace pirates_speed
             void QueueAnswers();
             void EndGame();
             void ClearAnswerQueue();
-
+            void ReceiveFromAll();
+            void ReceiveFromCaptain(const std::string &captain_name);
+            bool IsAnswered();
         private:
             bool CheckEndRound(const std::string &answer);
             std::pair<std::string,size_t> GetCaptainDetails(int captain_socket);
             void ReadCaptainAnswers(int captain_socket);
+
         private:
             TCPServerBroadcaster m_tcp_dispatcher;
             std::map<std::string, int> m_captain_sockets;

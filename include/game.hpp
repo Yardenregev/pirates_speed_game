@@ -21,7 +21,7 @@ class Game
         void AddCaptain();
         void StartGame();
         void EndGame();
-
+        void ReceiveFromAll();
     private:
         Server m_server;
         std::string m_commander_name;

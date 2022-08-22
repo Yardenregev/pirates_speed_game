@@ -50,17 +50,19 @@ namespace pirates_speed
     void User::StartGame()
     {
         std::string inventory = ReceiveMessage();
-        std::string message = "";
+        std::string command = "";
         while(!IsGameOver(inventory))
         {
+            SendMessage("start_round");
             std::cout << inventory << std::endl;
             std::cout << "Waiting for command from captain..." << std::endl;
-            message = ReceiveMessage();
-            std::cout << "Captain: " << message << std::endl;
+            command = ReceiveMessage();
+            std::cout << "Captain: " << command << std::endl;
             size_t choice = 0;
             std::cin >> choice;
             SendMessage(std::to_string(choice));
             std::string reply = ReceiveMessage();
+            SendMessage("end_round");
             std::cout << "Reply: " << reply << std::endl;
             inventory = ReceiveMessage();
         }

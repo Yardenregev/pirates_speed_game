@@ -9,6 +9,12 @@ namespace pirates_speed
         : TCPComponent(port, ip_address),
             m_clients()
     {
+        int yes = 1;
+        if(setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) < 0)
+        {
+            throw std::runtime_error("setsockopt(SO_REUSEADDR) failed");
+        }
+
         if(bind(m_socket, (struct sockaddr *)&m_server_address, sizeof(m_server_address)) < 0)
         {
             throw std::runtime_error("Error binding socket");

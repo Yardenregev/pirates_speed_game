@@ -3,6 +3,7 @@
 #include <iostream>/*std cout cin*/
 #include "../include/pirate_types/pirate_types.hpp"
 #include <memory>
+#include "../include/threadpool.hpp"
 
 
 
@@ -47,6 +48,7 @@ namespace pirates_speed
         while (!CheckIfGameIsOver())
         {
             SendInventoriesToAllCaptains();
+            ReceiveFromAll();
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
@@ -54,6 +56,7 @@ namespace pirates_speed
             m_server.QueueAnswers();
             HandleAnswers(given_command);
             m_server.ClearAnswerQueue();
+            ReceiveFromAll();
         }
 
         SendGameOver();
@@ -114,7 +117,7 @@ namespace pirates_speed
 
             else
             {
-                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Wrong answer\n");
+                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Too bad\n");
             }
             
             if (answer_count == m_captains.size())
@@ -146,7 +149,10 @@ namespace pirates_speed
 
     bool Game::MakeCaptainHandleAnswer(const std::string &captain_name, std::shared_ptr<Answer> answer, const std::string &command)
     {
-       
+       if(m_server.IsAnswered())
+       {
+            return false;
+       }
        auto captain = m_captains.find(captain_name);
        if(captain == m_captains.end())
        {
@@ -171,6 +177,12 @@ namespace pirates_speed
             return captain->GetInventoryString();
         }
     }
+
+    void Game::ReceiveFromAll()
+    {
+        m_server.ReceiveFromAll();   
+    }
+
 
 
 
