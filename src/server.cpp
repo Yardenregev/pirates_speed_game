@@ -24,12 +24,19 @@ namespace pirates_speed
     {
         std::cout << "Waiting for captain to join the game..." << std::endl;
         int captain_socket = m_tcp_dispatcher.AddClient();
-        std::cout << "Captain joined the game" << std::endl;
         auto captain_details = GetCaptainDetails(captain_socket);
-        m_captain_sockets[captain_details.first] = captain_socket;
-        std::cout << "Captain socket: " << m_captain_sockets.at(captain_details.first) << std::endl;
+        if(m_captain_sockets.find(captain_details.first) == m_captain_sockets.end())
+        {
+            m_captain_sockets[captain_details.first] = captain_socket;
+            std::cout << "Captain socket: " << m_captain_sockets.at(captain_details.first) << std::endl;
 
-        std::cout << "Captain " << captain_details.first << " joined the game" << std::endl;
+            std::cout << "Captain " << captain_details.first << " joined the game" << std::endl;
+        }
+        else
+        {
+            std::cout << "Captain " << captain_details.first << " already joined " << std::endl;
+        }
+
         return captain_details;
     }
 
