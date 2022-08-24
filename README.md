@@ -1,8 +1,9 @@
 # Pirates Speed Game
 
 ## Game Rules 📃
-The players split into commander and captain,
-the commander manages the game and the captain plays the game.
+The players split into commander and captains,
+the commander manages the game and the captains play the game.
+Captains can't have the same name.
 
 Each captain has a hand of pirate scum, that he wishes to rid the ship of.
 
@@ -16,7 +17,6 @@ The winning captain is the first captain to have no pirates on the ship.
 ## Known Bugs 🐛
 If multiple messages are being sent instead of one by accident, the synchronization might mess up.
 Messages cannot have spaces, if spaces are entered, each word will be sent in the next message.
-Captains can't have the same name.
 
 ## Depenedencies 📦
 This game is compiled with g++
