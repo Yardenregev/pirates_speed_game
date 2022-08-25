@@ -8,7 +8,7 @@ Captains can't have the same name.
 Each captain has a hand of pirate scum, that he wishes to rid the ship of.
 
 The commander shouts a command to all the captains, and the captains each look 
-for a pirate that can perform the command and send the pirate to the commander.
+for a pirate that can perform the command and send the identifier number, written above a selected pirate, to the commander.
 The first captain to send a pirate that is able to perform the command is able to
 get rid of the pirate.
 
