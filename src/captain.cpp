@@ -62,18 +62,11 @@ namespace pirates_speed
         std::string inventory;
         for (auto &pirate : m_personal_inventory)
         {
-            inventory += std::to_string(pirate.first) + "\t";
-        }
-
-        inventory += "\n";
-
-        for (auto &pirate : m_personal_inventory)
-        {
-            inventory += pirate.second->ToString() + "\t";
+            inventory += std::to_string(pirate.first) + "\t - " + pirate.second->ToString();
+            inventory += "\n";
         }
 
         return inventory;
-
     }
     
 } // namespace pirates_speed
