@@ -56,7 +56,7 @@ namespace pirates_speed
         {
             SendInventoriesToAllCaptains();
             ReceiveFromAll();
-            std::cout << "All recieved inventories" << std::endl;
+            // std::cout << "All recieved inventories" << std::endl;
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
