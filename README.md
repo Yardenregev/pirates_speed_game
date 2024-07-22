@@ -40,22 +40,24 @@ make captain
 ./commander.out
 ```
 
-4. Enter your name, port for the game to be played and commander computer ip address.
+4. Select the menu option to set up the game, then select the network you would like to play, your IP should be assigned automatically
+
+5. Enter your name, port for the game to be played and commander computer ip address.
 
 >   For example: "Moby Dick" "8080" "10.10.0.197"
 
-5. When choosing 'Add Captain', run the captain executable in the captain computer.
+6. When choosing 'Add Captain', run the captain executable in the captain computer.
 
 ```bash
 ./captain.out
 ```
 
-6. Enter your name, port for the game to be played and commander computer ip address.
+7. Enter your name, port for the game to be played and commander computer ip address.
    The port and ip must be the same as entered in the commander computer.
 
 >   For example: "Jack Sparrow" "8080" "10.10.0.197"
 
-7. Choose 'Start Game' to start the game.
+8. Choose 'Start Game' to start the game.
 
 ## Playing The Game 🎮
 
