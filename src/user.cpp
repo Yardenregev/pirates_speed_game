@@ -1,4 +1,5 @@
 #include "../include/user.hpp"
+#include "../include/exceptions.hpp"
 
 #include <iostream>
 
@@ -24,7 +25,12 @@ namespace pirates_speed
 
     std::string User::ReceiveMessage()
     {
-        return m_tcp_client.ReceiveMessage();
+        std::string message = m_tcp_client.ReceiveMessage();
+        if (!m_tcp_client.IsConnected())
+        {
+            throw ConnectionWithCommanderException();
+        }
+        return message;
     }
 
 
@@ -49,24 +55,32 @@ namespace pirates_speed
 
     void User::StartGame()
     {
-        std::string inventory = ReceiveMessage();
-        std::string command = "";
-        while(!IsGameOver(inventory))
+        try
         {
-            SendMessage("start_round");
-            std::cout << inventory << std::endl;
-            std::cout << "Waiting for command from captain..." << std::endl;
-            command = ReceiveMessage();
-            std::cout << "Captain: " << command << std::endl;
-            size_t choice = 0;
-            std::cin >> choice;
-            SendMessage(std::to_string(choice));
-            std::string reply = ReceiveMessage();
-            std::cout << "Reply: " << reply << std::endl;
-            SendMessage("end_round");
-            inventory = ReceiveMessage();
-        }
+            std::string inventory = ReceiveMessage();
+            std::string command = "";
+            while(!IsGameOver(inventory))
+            {
+                SendMessage("start_round");
+                std::cout << inventory << std::endl;
+                std::cout << "Waiting for command from captain..." << std::endl;
+                command = ReceiveMessage();
+                std::cout << "Captain: " << command << std::endl;
+                size_t choice = 0;
+                std::cin >> choice;
+                SendMessage(std::to_string(choice));
+                std::string reply = ReceiveMessage();
+                std::cout << "Reply: " << reply << std::endl;
+                SendMessage("end_round");
+                inventory = ReceiveMessage();
+            }
 
-        std::cout << inventory << std::endl;
+            std::cout << inventory << std::endl;
+        }
+        catch (ConnectionWithCommanderException &e)
+        {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
     }
 } // namespace pirates_speed
