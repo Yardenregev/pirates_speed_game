@@ -1,10 +1,12 @@
-#include "../include/game.hpp"
 #include <iostream>/*std cout cin*/
-#include "../include/pirate_types/pirate_types.hpp"
 #include <memory>
-#include "../include/threadpool.hpp"
-
+#include <vector>
 #include <unordered_set>
+#include "../include/game.hpp"
+#include "../include/pirate_types/pirate_types.hpp"
+#include "../include/threadpool.hpp"
+#include "../include/server.hpp"
+
 
 
 namespace pirates_speed
@@ -50,7 +52,7 @@ namespace pirates_speed
         {
             SendInventoriesToAllCaptains();
             ReceiveFromAll();
-            // std::cout << "All recieved inventories" << std::endl;
+
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
@@ -80,11 +82,23 @@ namespace pirates_speed
 
     void Game::SendInventoriesToAllCaptains()
     {
+        std::vector<std::string> captains_to_remove;
         for (auto &captain : m_captains)
         {
             std::string inventory_string = captain.second->GetInventoryString();
-            std::cout << "Sending inventory to Captain " << captain.second->GetName() << std::endl;
-            m_server.SendMessageToCaptain(captain.second->GetName(), inventory_string);
+            if (Server::MESSAGE_CAPTAINNOTFOUND ==  m_server.SendMessageToCaptain(captain.second->GetName(), inventory_string))
+            {
+               captains_to_remove.push_back(captain.first);
+            }
+            else
+            {
+                std::cout << "Sent inventory to Captain " << captain.second->GetName() << std::endl;
+            }
+        }
+        for (auto &captain_to_remove : captains_to_remove)
+        {
+            std::cout << "Removing captain "<< captain_to_remove << std::endl;
+            m_captains.erase(captain_to_remove);
         }
     }
 

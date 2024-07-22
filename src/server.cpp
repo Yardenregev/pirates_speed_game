@@ -104,9 +104,14 @@ namespace pirates_speed
         EndRound();
     }
 
-    void Server::SendMessageToCaptain(const std::string &captain_name, const std::string &message)
+    Server::MessageStatus Server::SendMessageToCaptain(const std::string &captain_name, const std::string &message)
     {
-        m_tcp_dispatcher.SendMessageToClient(message, m_captain_sockets.at(captain_name));
+        if (m_captain_sockets.find(captain_name) != m_captain_sockets.end())
+        {
+            m_tcp_dispatcher.SendMessageToClient(message, m_captain_sockets.at(captain_name));
+            return MESSAGE_SENT;
+        }
+        return MESSAGE_CAPTAINNOTFOUND;
     }
 
     void Server::ClearAnswerQueue()
