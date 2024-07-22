@@ -5,7 +5,12 @@
 
 namespace pirates_speed
 {
-
+enum MenuChoices{
+    CHOICE_SETUPGAME = 1,
+    CHOICE_ADDCAPTAIN,
+    CHOICE_STARTGAME,
+    CHOICE_EXIT
+};
 
 GameMenu::GameMenu()
 : m_set_up_game(false),
@@ -16,10 +21,10 @@ GameMenu::GameMenu()
 
 void GameMenu::ShowMenu()
 {
-    std::cout << "1. Set up game" << std::endl;
-    std::cout << "2. Add captain" << std::endl;
-    std::cout << "3. Start game" << std::endl;
-    std::cout << "4. Exit" << std::endl;
+    std::cout << CHOICE_SETUPGAME <<". Set up game" << std::endl;
+    std::cout << CHOICE_ADDCAPTAIN <<". Add captain" << std::endl;
+    std::cout << CHOICE_STARTGAME <<". Start game" << std::endl;
+    std::cout << CHOICE_EXIT <<". Exit" << std::endl;
 }
 
 GameMenu::SetupStatus GameMenu::TakeChoice()
@@ -34,20 +39,27 @@ GameMenu::SetupStatus GameMenu::TakeChoice()
     
         switch(choice)
         {
-            case 1:
+            case CHOICE_SETUPGAME:
                 stat = SetUpGame();
                 if (SETUP_FAILURE == stat)
                 {
                     return SETUP_FAILURE;
                 }
                 break;
-            case 2:
+            case CHOICE_ADDCAPTAIN:
                 AddCaptain();
                 break;
-            case 3:
-                StartGame();
-                return SETUP_SUCCESS;
-            case 4:
+            case CHOICE_STARTGAME:
+                stat = StartGame();
+                if (SETUP_FAILURE == stat)
+                {
+                    break;
+                }
+                else
+                {
+                    return stat;
+                }
+            case CHOICE_EXIT:
                 return SETUP_SUCCESS;
             default:
                 std::cout << "Invalid choice" << std::endl;
@@ -108,32 +120,36 @@ GameMenu::SetupStatus GameMenu::SetUpGame()
 }
 
 
-void GameMenu::AddCaptain()
+GameMenu::SetupStatus GameMenu::AddCaptain()
 {
     if (!m_set_up_game)
     {
         std::cout << "Set up game first" << std::endl;
-        return;
+        return SETUP_FAILURE;
     }
 
     if(m_captain_count >= std::thread::hardware_concurrency())
     {
         std::cout << "Maximum number of captains reached" << std::endl;
-        return;
+        return SETUP_FAILURE;
     }
 
     m_game->AddCaptain();
     m_captain_count++;
+
+    return SETUP_SUCCESS;
 }
 
-void GameMenu::StartGame()
+GameMenu::SetupStatus GameMenu::StartGame()
 {
     if (!m_set_up_game || m_captain_count == 0)
     {
         std::cout << "Set up game and add captains first" << std::endl;
-        return;
+        return SETUP_FAILURE;
     }
     m_game->StartGame();
+
+    return SETUP_SUCCESS;
 }
 
 

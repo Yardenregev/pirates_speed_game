@@ -13,8 +13,8 @@ public:
     void ShowMenu();
     SetupStatus TakeChoice();
     SetupStatus SetUpGame();
-    void AddCaptain();
-    void StartGame();
+    SetupStatus AddCaptain();
+    SetupStatus StartGame();
 
 private:
     std::shared_ptr<Game> m_game;
