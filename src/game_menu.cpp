@@ -1,6 +1,7 @@
 #include "../include/game_menu.hpp"
 #include <iostream>/*std cout cin*/
 #include <thread>
+#include "../include/default_values.hpp"
 
 namespace pirates_speed
 {
@@ -21,26 +22,33 @@ void GameMenu::ShowMenu()
     std::cout << "4. Exit" << std::endl;
 }
 
-void GameMenu::TakeChoice()
+GameMenu::SetupStatus GameMenu::TakeChoice()
 {
     int choice;
+    SetupStatus stat = SETUP_SUCCESS;
     while(1)
     {
+    ShowMenu();
     std::cout << "Enter main menu choice: ";
     std::cin >> choice;
+    
         switch(choice)
         {
             case 1:
-                SetUpGame();
+                stat = SetUpGame();
+                if (SETUP_FAILURE == stat)
+                {
+                    return SETUP_FAILURE;
+                }
                 break;
             case 2:
                 AddCaptain();
                 break;
             case 3:
                 StartGame();
-                return;
+                return SETUP_SUCCESS;
             case 4:
-                return;
+                return SETUP_SUCCESS;
             default:
                 std::cout << "Invalid choice" << std::endl;
                 break;
@@ -49,28 +57,54 @@ void GameMenu::TakeChoice()
 
 }
 
-void GameMenu::SetUpGame()
+GameMenu::SetupStatus GameMenu::SetUpGame()
 {
+    if (m_set_up_game)
+    {
+        std::cout << "Game already made" << std::endl;
+        return SETUP_SUCCESS;
+    }
     std::string commander_name;
     int commander_port;
-    std::string commander_ip_address;
+    std::string commander_ip_address = DefaultValues::getDefaultIP();
     std::cout << "Set up game" << std::endl;
-    std::cout << "Enter commander name: ";
-    std::cin >> commander_name;
-    std::cout << "Enter commander port: ";
-    std::cin >> commander_port;
-    std::cout << "Enter commander ip address: ";
-    std::cin >> commander_ip_address;
-
-    if(commander_name.empty() || commander_ip_address.empty() || commander_port == 0)
+    if (commander_ip_address.empty())
     {
-        std::cout << "Invalid commander name, ip address or port" << std::endl;
-        return;
+        std::cout << "Could not retreive IP of computer"<<std::endl;
+        std::cout << "Enter commander ip address: ";
+        std::cin >> commander_ip_address;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (commander_ip_address.empty())
+        {
+            std::cout << "Invalid ip address" << std::endl;
+            return SETUP_FAILURE;
+        }
+    }
+    std::cout << "Enter commander name [" <<DefaultValues::getDefaultCommanderName() << "]: " << std::endl;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, commander_name);
+    if (commander_name.empty())
+    {
+        commander_name = DefaultValues::getDefaultCommanderName();
     }
 
+    std::cout << "Enter commander port["<< DefaultValues::getDefaultPort() << "]: " << std::endl;
+    std::string port_str;
+    std::getline(std::cin, port_str);
+    try{
+        commander_port = std::stoi(port_str);
+    }
+    catch (...)
+    {
+        commander_port = DefaultValues::getDefaultPort();
+    }
+    std::cout << "made game with name " << commander_name
+             << ", port " << commander_port << " and ip " 
+             << commander_ip_address << std::endl;
     m_game = std::make_shared<Game>(commander_name, commander_port, commander_ip_address);
     m_set_up_game = true;
 
+    return SETUP_SUCCESS;
 }
 
 
@@ -101,6 +135,8 @@ void GameMenu::StartGame()
     }
     m_game->StartGame();
 }
+
+
 
 
 } // namespace pirates_speed

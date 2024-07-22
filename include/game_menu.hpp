@@ -5,10 +5,14 @@ namespace pirates_speed
 class GameMenu
 {
 public:
+    enum SetupStatus{
+        SETUP_SUCCESS,
+        SETUP_FAILURE
+    };
     GameMenu();
     void ShowMenu();
-    void TakeChoice();
-    void SetUpGame();
+    SetupStatus TakeChoice();
+    SetupStatus SetUpGame();
     void AddCaptain();
     void StartGame();
 

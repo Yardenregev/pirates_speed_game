@@ -38,6 +38,8 @@ namespace pirates_speed
             std::map<std::string, int> m_captain_sockets;
             WaitableQueue<std::shared_ptr<Answer>> m_answers;
             bool m_answered;
+            int m_port;
+            std::string m_ip;
     };
     
 } // namespace pirates_speed

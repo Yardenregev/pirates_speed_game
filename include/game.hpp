@@ -7,7 +7,7 @@
 #include "inventory.hpp"
 namespace pirates_speed
 {
-    
+
 class Game
 {
     public:
@@ -31,7 +31,6 @@ class Game
     
         bool CheckIfGameIsOver();
         void SendGameOver();
-        void RegisterCaptain();
         void AddPirateForAllButCorrectCaptain(const std::string & correct_captain_name);
         
 

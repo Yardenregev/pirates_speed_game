@@ -26,8 +26,9 @@ namespace pirates_speed
 
 
 
-    void Game::RegisterCaptain()
-    {   
+
+    void Game::AddCaptain()
+    {
         auto captain_details = m_server.AddCaptain();
         std::shared_ptr<Captain> captain = std::make_shared<Captain>(captain_details.first,m_game_pirate_inventory ,captain_details.second);
         if(m_captains.find(captain->GetName()) == m_captains.end())
@@ -39,13 +40,6 @@ namespace pirates_speed
         {
             std::cout << "Captain " << captain->GetName() << " already exists" << std::endl;
         }
-    }   
-
-
-
-    void Game::AddCaptain()
-    {
-        RegisterCaptain();
     }
 
 
@@ -201,7 +195,6 @@ namespace pirates_speed
     {
         m_server.ReceiveFromAll();   
     }
-
 
 
 

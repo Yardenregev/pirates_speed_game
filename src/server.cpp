@@ -16,13 +16,18 @@ namespace pirates_speed
         : m_tcp_dispatcher(port, ip_address),
           m_captain_sockets(),
           m_answers(),
-          m_answered(false)
+          m_answered(false),
+          m_port(port),
+          m_ip(ip_address)
     {
     }
 
     std::pair<std::string,size_t> Server::AddCaptain()
     {
         std::cout << "Waiting for captain to join the game..." << std::endl;
+        std::cout << "IP: " << m_ip << std::endl;
+        std::cout << "Port: " << m_port << std::endl;
+
         int captain_socket = m_tcp_dispatcher.AddClient();
         auto captain_details = GetCaptainDetails(captain_socket);
         if(m_captain_sockets.find(captain_details.first) == m_captain_sockets.end())
@@ -132,7 +137,6 @@ namespace pirates_speed
     {
         return m_answered;
     }
-
 
     
 
