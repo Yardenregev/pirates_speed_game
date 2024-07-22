@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstddef>  // size_t
-#include <vector>   
-#include <queue>    
+#include <vector>
+#include <queue>
 #include <thread>
 #include <functional>
 #include <mutex>
@@ -12,19 +12,18 @@
 #include "waitable_queue.hpp"
 #include "pq_wrapper.hpp"
 
-
 namespace pirates_speed
 {
 class ThreadPool;
-void ThreadTask(ThreadPool &tp,size_t index);
+void ThreadTask(ThreadPool &tp, size_t index);
 
 enum TaskPriority {
-        FINISH,
-        LOW,
-        MEDIUM,
-        HIGH,
-        PAUSE
-    };
+    FINISH,
+    LOW,
+    MEDIUM,
+    HIGH,
+    PAUSE
+};
 
 template<typename Y>
 class Future;
@@ -33,8 +32,8 @@ class Future;
 
 class ThreadPool
 {
-    class GeneralTask;
 public:
+    class GeneralTask;
     explicit ThreadPool(size_t thread_num_ = std::thread::hardware_concurrency());
     ThreadPool(const ThreadPool&) = delete;
     ThreadPool& operator=(const ThreadPool&) = delete;
@@ -43,13 +42,10 @@ public:
     template <typename Y>
     Future<Y> AddTask(const std::function<Y()>& task, TaskPriority priority);
     void AddTask(const std::function<void()>& task, TaskPriority priority);
-    
-    
+
     void ResizePool(size_t);
     void Resume();
     void Pause(); // Stop Thread Assignment
-
-
 
 private:
     void PoisonApple(TaskPriority priority = TaskPriority::FINISH);
@@ -62,35 +58,30 @@ private:
     std::mutex m_mutex_can_pop;
     std::vector<bool> m_vec_should_terminate;
 
-private:
-
-private:
+public:
     class GeneralTask
     {
-        public:
-            virtual void operator() ()= 0;
-            virtual ~GeneralTask() noexcept = default;
+    public:
+        virtual void operator() () = 0;
+        virtual ~GeneralTask() noexcept = default;
     };
     template <typename Y>
     class TemplatedTask;
     template <typename Y>
     class Task : public ThreadPool::GeneralTask
     {
-
-
     public:
-
         Task(const std::function<Y()>& task, TaskPriority priority)
-            :m_task(task), m_priority(priority), m_is_valid(false)
-            ,m_mutex(), m_cond_has_res()
+            : m_task(task), m_priority(priority), m_is_valid(false)
+            , m_mutex(), m_cond_has_res()
         {
-            //empty
+            // empty
         }
         Task(const Task& other)
-            :m_task(other.m_task), m_priority(other.m_priority),
-             m_is_valid(false),m_mutex(), m_cond_has_res()
+            : m_task(other.m_task), m_priority(other.m_priority),
+            m_is_valid(false), m_mutex(), m_cond_has_res()
         {
-            //empty
+            // empty
         }
 
         Task& operator=(const Task& other)
@@ -102,10 +93,10 @@ private:
             }
             return *this;
         }
-        
+
         virtual ~Task() noexcept
         {
-            //empty
+            // empty
         }
 
         bool operator<(const Task& other) const
@@ -138,16 +129,15 @@ private:
         template <typename Z>
         friend Z& GetRes(ThreadPool::TemplatedTask<Z>& task);
     public:
-
         TemplatedTask(const std::function<Y()>& task, TaskPriority priority)
-            :Task<Y>(task, priority), m_result()
+            : Task<Y>(task, priority), m_result()
         {
-            //empty
+            // empty
         }
         TemplatedTask(const TemplatedTask& other)
-        :Task<Y>(other), m_result(other.m_result)
+            : Task<Y>(other), m_result(other.m_result)
         {
-            //empty
+            // empty
         }
 
         TemplatedTask& operator=(const TemplatedTask& other)
@@ -159,10 +149,10 @@ private:
             }
             return *this;
         }
-        
+
         ~TemplatedTask() noexcept
         {
-            //empty
+            // empty
         }
 
         void operator()()
@@ -176,13 +166,8 @@ private:
         friend class Future<Y>;
         Y m_result;
     };
-    
-
-
-
 
 private:
-    
     friend void ThreadTask(ThreadPool &tp, size_t index);
 
     class Thread
@@ -190,9 +175,9 @@ private:
         friend class ThreadPool;
     public:
         explicit Thread(ThreadPool& tp, size_t index)
-            :m_trd(ThreadTask, std::ref(tp),index),m_index(index)
+            : m_trd(ThreadTask, std::ref(tp), index), m_index(index)
         {
-            //empty
+            // empty
         }
         Thread(const Thread& other) = delete;
         Thread& operator=(const Thread&) = delete;
@@ -227,30 +212,25 @@ private:
     Y *m_result;
 };
 
-
-
 template <typename Y>
 Future<Y>::Future(std::shared_ptr<ThreadPool::TemplatedTask<Y>> task)
-    :m_ptr(task), m_is_ready(false), m_result(nullptr)
+    : m_ptr(task), m_is_ready(false), m_result(nullptr)
 {
-    //empty
+    // empty
 }
-
 
 template <typename Y>
 Future<Y>::~Future() noexcept
 {
-    //empty
+    // empty
 }
-
 
 template <typename Y>
 Future<Y>::Future(const Future& other)
-    :m_ptr(other.m_ptr), m_is_ready(other.m_is_ready), m_result(other.m_result)
+    : m_ptr(other.m_ptr), m_is_ready(other.m_is_ready), m_result(other.m_result)
 {
-    //empty
+    // empty
 }
-
 
 template <typename Y>
 Future<Y>& Future<Y>::operator=(const Future& other)
@@ -263,7 +243,6 @@ Future<Y>& Future<Y>::operator=(const Future& other)
     return *this;
 }
 
- 
 template <typename Y>
 Y& Future<Y>::Get()
 {
@@ -281,17 +260,20 @@ void Future<Y>::Wait()
 {
     if (!m_is_ready)
     {
-        m_ptr->m_cond_has_res.wait(m_ptr->m_mutex);
+        std::unique_lock<std::mutex> lock(m_ptr->m_mutex); // Lock the mutex
+        while (!m_ptr->m_is_valid)
+        {
+            m_ptr->m_cond_has_res.wait(lock);
+        }
         m_is_ready = true;
     }
 }
-
 
 template <typename Y>
 Y& GetRes(ThreadPool::TemplatedTask<Y>& task)
 {
     std::unique_lock<std::mutex> lock(task.m_mutex);
-    while(!task.m_is_valid)
+    while (!task.m_is_valid)
     {
         task.m_cond_has_res.wait(lock);
     }
@@ -299,17 +281,14 @@ Y& GetRes(ThreadPool::TemplatedTask<Y>& task)
 }
 /*<-------------------------------------------------------------------------->*/
 
-
 template <typename Y>
 Future<Y> ThreadPool::AddTask(const std::function<Y()>& task, TaskPriority priority)
 {
     std::shared_ptr<ThreadPool::TemplatedTask<Y>> task_ = std::make_shared<ThreadPool::TemplatedTask<Y>>(task, priority);
     m_wqueue.Push(task_);
     Future<Y> future(task_);
-    
+
     return future;
 }
-
-
 
 } // namespace pirates_speed
