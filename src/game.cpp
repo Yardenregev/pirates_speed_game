@@ -29,19 +29,24 @@ namespace pirates_speed
 
 
 
-    void Game::AddCaptain()
+    Game::GameStatus Game::AddCaptain()
     {
         auto captain_details = m_server.AddCaptain();
+        if (captain_details.first == "")
+        {
+            return GAME_FAILURE;
+        }
         std::shared_ptr<Captain> captain = std::make_shared<Captain>(captain_details.first,m_game_pirate_inventory ,captain_details.second);
         if(m_captains.find(captain->GetName()) == m_captains.end())
         {
             m_captains[captain->GetName()] = captain;
             std::cout << "Captain " << captain->GetName() << " registered" << std::endl;
+            if (Server::MESSAGE_SENT == m_server.SendMessageToCaptain(captain->GetName(),"connected"))
+            {
+                return GAME_SUCCESS;
+            }
         }
-        else
-        {
-            std::cout << "Captain " << captain->GetName() << " already exists" << std::endl;
-        }
+        return GAME_FAILURE;
     }
 
 

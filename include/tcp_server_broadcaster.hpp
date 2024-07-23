@@ -9,6 +9,7 @@ class TCPServerBroadcaster :public TCPComponent
 public:
     TCPServerBroadcaster(int port, const std::string & ip_address);
     int AddClient();
+    void RemoveClient(int client_to_remove);
     void SendMessageToAll(const std::string &message);
     void SendMessageToClient(const std::string &message, int client_socket);
     std::string ReceiveMessageFromClient(int client_socket);

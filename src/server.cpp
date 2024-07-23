@@ -40,6 +40,9 @@ namespace pirates_speed
         else
         {
             std::cout << "Captain " << captain_details.first << " already joined " << std::endl;
+            m_tcp_dispatcher.SendMessageToClient("name_taken", captain_socket);
+            m_tcp_dispatcher.RemoveClient(captain_socket);
+            return std::make_pair("",0);
         }
 
         return captain_details;

@@ -2,18 +2,23 @@
 #include <iostream>/*std cout cin*/
 using namespace pirates_speed;
 
-void TestGame(const std::string & captain_name, 
+int TestGame(const std::string & captain_name, 
               const std::string & ip_address, int port,size_t num_of_crew_pirates = 5);
 
-void TestGame(const std::string & captain_name,
+int TestGame(const std::string & captain_name,
               const std::string & ip_address, int port, size_t num_of_crew_pirates)
 {
 
     User user(captain_name, num_of_crew_pirates, ip_address, port);
 
-    user.Register();
+    if (User::REGISTRATION_FAILURE == user.Register())
+    {
+        return 1;
+    }
     std::cout << "Registered" << std::endl;
     user.StartGame();
+
+    return 0;
 
 }
 
@@ -35,10 +40,5 @@ int main ()
         return 1;
     }
 
-    TestGame(captain_name, captain_ip_address, captain_port);
-
-
-
-
-    return 0;
+    return TestGame(captain_name, captain_ip_address, captain_port);
 }

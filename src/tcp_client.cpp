@@ -1,6 +1,7 @@
 #include "../include/tcp_client.hpp"
 #include <stdexcept>
 #include <cstring>
+#include <iostream>
 
 namespace pirates_speed
 {
@@ -13,6 +14,7 @@ namespace pirates_speed
 
     void TCPClient::Connect()
     {
+        std::cout << "Waiting for commander to add you in" << std::endl;
         if(connect(m_socket, (struct sockaddr *)&m_server_address, sizeof(m_server_address)) < 0)
         {
             throw std::runtime_error("Error connecting to server");

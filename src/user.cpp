@@ -10,11 +10,18 @@ namespace pirates_speed
     {
     }
 
-    void User::Register()
+    User::RegistrationStatus User::Register()
     {
-        m_tcp_client.Connect();
-        std::cout << "Connected to server" << std::endl;
-        SendUserDetails();
+        try{
+            m_tcp_client.Connect();
+            SendUserDetails();
+            return IsConnectedToGame();
+        }
+        catch (std::runtime_error &e)
+        {
+            std::cout << e.what() << std::endl;
+        }
+        return REGISTRATION_FAILURE;
     }
 
     void User::SendMessage(const std::string &message)
@@ -81,6 +88,29 @@ namespace pirates_speed
         {
             std::cerr << e.what() << std::endl;
             return;
+        }
+    }
+
+
+    User::RegistrationStatus User::IsConnectedToGame()
+    {
+        try
+        {
+            std::string connection_status = ReceiveMessage();
+            if (0 == connection_status.compare("connected"))
+            {
+                return REGISTRATION_SUCCESS;
+            }
+            else if (0 == connection_status.compare("name_taken"))
+            {
+                std::cout << "Name " << m_name << " already taken"<< std::endl;
+            }
+            return REGISTRATION_FAILURE;
+        }
+        catch (ConnectionWithCommanderException &e)
+        {
+            std::cerr << e.what() << std::endl;
+            return REGISTRATION_FAILURE;
         }
     }
 } // namespace pirates_speed
