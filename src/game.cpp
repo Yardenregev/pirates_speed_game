@@ -6,6 +6,7 @@
 #include "../include/pirate_types/pirate_types.hpp"
 #include "../include/threadpool.hpp"
 #include "../include/server.hpp"
+#include "../include/messages.hpp"
 
 
 
@@ -41,7 +42,7 @@ namespace pirates_speed
         {
             m_captains[captain->GetName()] = captain;
             std::cout << "Captain " << captain->GetName() << " registered" << std::endl;
-            if (Server::MESSAGE_SENT == m_server.SendMessageToCaptain(captain->GetName(),"connected"))
+            if (Server::MESSAGE_SENT == m_server.SendMessageToCaptain(captain->GetName(),Messages::connected))
             {
                 return GAME_SUCCESS;
             }
@@ -135,13 +136,13 @@ namespace pirates_speed
             {
                 m_server.EndRound();
                 correct_captain_name = answer->GetCaptainName();
-                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Correct Answer\n");
+                m_server.SendMessageToCaptain(answer->GetCaptainName(), Messages::correct_answer);
                 break;
             }
 
             else
             {
-                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Wrong Answer\n");
+                m_server.SendMessageToCaptain(answer->GetCaptainName(), Messages::wrong_answer);
             }
             
             if (answer_count == m_captains.size())
@@ -157,7 +158,7 @@ namespace pirates_speed
         {
             if(answered_captains.find(captain.second->GetName()) == answered_captains.end())
             {
-                m_server.SendMessageToCaptain(captain.second->GetName(), "Too Slow\n");
+                m_server.SendMessageToCaptain(captain.second->GetName(), Messages::too_slow_answer);
             }
         }
 

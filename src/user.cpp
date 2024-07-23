@@ -1,5 +1,6 @@
 #include "../include/user.hpp"
 #include "../include/exceptions.hpp"
+#include "../include/messages.hpp"
 
 #include <iostream>
 
@@ -68,7 +69,7 @@ namespace pirates_speed
             std::string command = "";
             while(!IsGameOver(inventory))
             {
-                SendMessage("start_round");
+                SendMessage(Messages::start_round);
                 std::cout << inventory << std::endl;
                 std::cout << "Waiting for command from captain..." << std::endl;
                 command = ReceiveMessage();
@@ -78,7 +79,7 @@ namespace pirates_speed
                 SendMessage(std::to_string(choice));
                 std::string reply = ReceiveMessage();
                 std::cout << "Reply: " << reply << std::endl;
-                SendMessage("end_round");
+                SendMessage(Messages::end_round);
                 inventory = ReceiveMessage();
             }
 
@@ -97,11 +98,11 @@ namespace pirates_speed
         try
         {
             std::string connection_status = ReceiveMessage();
-            if (0 == connection_status.compare("connected"))
+            if (0 == connection_status.compare(Messages::connected))
             {
                 return REGISTRATION_SUCCESS;
             }
-            else if (0 == connection_status.compare("name_taken"))
+            else if (0 == connection_status.compare(Messages::name_taken))
             {
                 std::cout << "Name " << m_name << " already taken"<< std::endl;
             }

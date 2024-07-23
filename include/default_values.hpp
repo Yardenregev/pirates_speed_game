@@ -15,6 +15,7 @@ namespace pirates_speed
 {
 class DefaultValues{
     public:
+        DefaultValues() = delete;
         static const std::string& getDefaultCommanderName(){
             static const std::string defaultName = "Black Beard";
             return defaultName;

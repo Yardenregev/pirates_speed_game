@@ -59,7 +59,7 @@ make captain
 
 ## Playing The Game 🎮
 
-The game is played by minimum of two players, the commander and the captain.
+The game is played by minimum of two players, one commander and one captain.
 
 All captains are showed which pirates they have and what command they can perform.
 
