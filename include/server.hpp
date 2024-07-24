@@ -22,7 +22,6 @@ namespace pirates_speed
         public:
             std::pair<std::string,size_t> AddCaptain();
             void ShoutCommand(const std::string &command);
-            void SendInventoryToCaptain(const std::string &captain_name, const std::string & inventory);
             MessageStatus SendMessageToCaptain(const std::string &captain_name, const std::string &message);
             void SendMessageToAll(const std::string &message);
             void GetAnswer(std::shared_ptr<Answer> &answer);

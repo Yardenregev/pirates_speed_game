@@ -34,7 +34,7 @@ class DefaultValues{
             }
 
             // Prompt user to select an interface
-            int choice;
+            size_t choice;
             while(true)
             {
                 std::cout << "Available network interfaces:" << std::endl;

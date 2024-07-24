@@ -25,7 +25,6 @@ class Game
         void AddPirateToGameInventory(const std::string &role, std::shared_ptr<CrewPirate> pirate);
         GameStatus AddCaptain();
         void StartGame();
-        void EndGame();
         void ReceiveFromAll();
     private:
         Server m_server;
@@ -38,10 +37,6 @@ class Game
         void SendGameOver();
         void AddPirateForAllButCorrectCaptain(const std::string & correct_captain_name);
         
-
-        void ConnectCommanderToCaptain();
-        void ConnectCaptainToCommander(std::shared_ptr<Captain> &captain);
-        void ConnectCommanderAndCaptain(std::shared_ptr<Captain> &captain);
         void HandleAnswers(const std::string &command);
         void SendInventoriesToAllCaptains();
         std::string GetCaptainInventory(const std::string &captain_name);

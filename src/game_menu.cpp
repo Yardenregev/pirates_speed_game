@@ -13,9 +13,9 @@ enum MenuChoices{
 };
 
 GameMenu::GameMenu()
-: m_set_up_game(false),
-  m_game(nullptr),
-  m_captain_count(0)
+:  m_game(nullptr),
+   m_set_up_game(false),
+   m_captain_count(0)
   {}
 
 
