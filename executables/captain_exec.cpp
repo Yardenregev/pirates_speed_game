@@ -1,5 +1,9 @@
-#include "../include/user.hpp"
 #include <iostream>/*std cout cin*/
+#include <thread>
+
+#include "../include/user.hpp"
+#include "../include/default_values.hpp"
+
 using namespace pirates_speed;
 
 int TestGame(const std::string & captain_name, 
@@ -29,8 +33,19 @@ int main ()
     std::string captain_ip_address;
     std::cout << "Enter captain name: ";
     std::cin >> captain_name;
-    std::cout << "Enter game port: ";
-    std::cin >> captain_port;
+    std::cout << "Enter game port ["<< DefaultValues::getDefaultPort()<<"]: ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::string port_str;
+    std::getline(std::cin, port_str);
+    try
+    {
+        captain_port = std::stoi(port_str);
+    }
+    catch (...)
+    {
+        captain_port = DefaultValues::getDefaultPort();
+    }
+
     std::cout << "Enter game ip address: ";
     std::cin >> captain_ip_address;
 
