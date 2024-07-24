@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <iostream>/*std cout cin*/
 #include <cstring>
+#include <algorithm>
 namespace pirates_speed
 {
 
@@ -37,6 +38,14 @@ namespace pirates_speed
         }
         m_clients.push_back(client_socket);
         return client_socket;
+    }
+
+    void TCPServerBroadcaster::RemoveClient(int client_to_remove)
+    {
+        auto it = std::find(m_clients.begin(), m_clients.end(), client_to_remove);
+        if (it != m_clients.end()) {
+            m_clients.erase(it);
+        }
     }
 
     void TCPServerBroadcaster::SendMessageToAll(const std::string &message)

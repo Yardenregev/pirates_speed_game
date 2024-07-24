@@ -1,7 +1,7 @@
 #include "../include/server.hpp"
 #include <iostream>/*std cout cin*/
 #include "../include/threadpool.hpp"
-
+#include "../include/messages.hpp"
 
 namespace pirates_speed
 {
@@ -40,6 +40,9 @@ namespace pirates_speed
         else
         {
             std::cout << "Captain " << captain_details.first << " already joined " << std::endl;
+            m_tcp_dispatcher.SendMessageToClient(Messages::name_taken, captain_socket);
+            m_tcp_dispatcher.RemoveClient(captain_socket);
+            return std::make_pair("",0);
         }
 
         return captain_details;
@@ -55,7 +58,7 @@ namespace pirates_speed
 
     bool Server::CheckEndRound(const std::string &answer)
     {
-        return answer == "end_round";
+        return answer == Messages::end_round;
     }
     
 
@@ -96,7 +99,7 @@ namespace pirates_speed
     void Server::EndRound()
     {
         m_answered = true;
-        m_answers.Push(std::make_shared<Answer>("end_round", "end_round",Priority::END_ROUND));
+        m_answers.Push(std::make_shared<Answer>(Messages::end_round, Messages::end_round,Priority::END_ROUND));
     }
 
     void Server::EndGame()
@@ -104,9 +107,14 @@ namespace pirates_speed
         EndRound();
     }
 
-    void Server::SendMessageToCaptain(const std::string &captain_name, const std::string &message)
+    Server::MessageStatus Server::SendMessageToCaptain(const std::string &captain_name, const std::string &message)
     {
-        m_tcp_dispatcher.SendMessageToClient(message, m_captain_sockets.at(captain_name));
+        if (m_captain_sockets.find(captain_name) != m_captain_sockets.end())
+        {
+            m_tcp_dispatcher.SendMessageToClient(message, m_captain_sockets.at(captain_name));
+            return MESSAGE_SENT;
+        }
+        return MESSAGE_CAPTAINNOTFOUND;
     }
 
     void Server::ClearAnswerQueue()

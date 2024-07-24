@@ -13,9 +13,9 @@ enum MenuChoices{
 };
 
 GameMenu::GameMenu()
-: m_set_up_game(false),
-  m_game(nullptr),
-  m_captain_count(0)
+:  m_game(nullptr),
+   m_set_up_game(false),
+   m_captain_count(0)
   {}
 
 
@@ -134,10 +134,14 @@ GameMenu::SetupStatus GameMenu::AddCaptain()
         return SETUP_FAILURE;
     }
 
-    m_game->AddCaptain();
-    m_captain_count++;
+    if (Game::GAME_SUCCESS == m_game->AddCaptain())
+    {
+        m_captain_count++;
+        return SETUP_SUCCESS;
+    }
+    
+    return SETUP_FAILURE;
 
-    return SETUP_SUCCESS;
 }
 
 GameMenu::SetupStatus GameMenu::StartGame()

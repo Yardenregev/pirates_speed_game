@@ -23,8 +23,5 @@ namespace pirates_speed
             const Inventory<std::string,std::shared_ptr<CrewPirate>> &m_game_inventory;
             std::string m_name;
             Inventory<size_t,std::shared_ptr<CrewPirate>> m_personal_inventory;
-
-            void PrintInventory();
-            void HandleInput(const std::string &given_command);
     };
 } // namespace pirates_speed

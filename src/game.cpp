@@ -1,10 +1,13 @@
-#include "../include/game.hpp"
 #include <iostream>/*std cout cin*/
-#include "../include/pirate_types/pirate_types.hpp"
 #include <memory>
-#include "../include/threadpool.hpp"
-
+#include <vector>
 #include <unordered_set>
+#include "../include/game.hpp"
+#include "../include/pirate_types/pirate_types.hpp"
+#include "../include/threadpool.hpp"
+#include "../include/server.hpp"
+#include "../include/messages.hpp"
+
 
 
 namespace pirates_speed
@@ -27,19 +30,24 @@ namespace pirates_speed
 
 
 
-    void Game::AddCaptain()
+    Game::GameStatus Game::AddCaptain()
     {
         auto captain_details = m_server.AddCaptain();
+        if (captain_details.first == "")
+        {
+            return GAME_FAILURE;
+        }
         std::shared_ptr<Captain> captain = std::make_shared<Captain>(captain_details.first,m_game_pirate_inventory ,captain_details.second);
         if(m_captains.find(captain->GetName()) == m_captains.end())
         {
             m_captains[captain->GetName()] = captain;
             std::cout << "Captain " << captain->GetName() << " registered" << std::endl;
+            if (Server::MESSAGE_SENT == m_server.SendMessageToCaptain(captain->GetName(),Messages::connected))
+            {
+                return GAME_SUCCESS;
+            }
         }
-        else
-        {
-            std::cout << "Captain " << captain->GetName() << " already exists" << std::endl;
-        }
+        return GAME_FAILURE;
     }
 
 
@@ -50,7 +58,7 @@ namespace pirates_speed
         {
             SendInventoriesToAllCaptains();
             ReceiveFromAll();
-            // std::cout << "All recieved inventories" << std::endl;
+
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
             std::cin >> given_command;
@@ -80,11 +88,23 @@ namespace pirates_speed
 
     void Game::SendInventoriesToAllCaptains()
     {
+        std::vector<std::string> captains_to_remove;
         for (auto &captain : m_captains)
         {
             std::string inventory_string = captain.second->GetInventoryString();
-            std::cout << "Sending inventory to Captain " << captain.second->GetName() << std::endl;
-            m_server.SendMessageToCaptain(captain.second->GetName(), inventory_string);
+            if (Server::MESSAGE_CAPTAINNOTFOUND ==  m_server.SendMessageToCaptain(captain.second->GetName(), inventory_string))
+            {
+               captains_to_remove.push_back(captain.first);
+            }
+            else
+            {
+                std::cout << "Sent inventory to Captain " << captain.second->GetName() << std::endl;
+            }
+        }
+        for (auto &captain_to_remove : captains_to_remove)
+        {
+            std::cout << "Removing captain "<< captain_to_remove << std::endl;
+            m_captains.erase(captain_to_remove);
         }
     }
 
@@ -116,13 +136,13 @@ namespace pirates_speed
             {
                 m_server.EndRound();
                 correct_captain_name = answer->GetCaptainName();
-                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Correct Answer\n");
+                m_server.SendMessageToCaptain(answer->GetCaptainName(), Messages::correct_answer);
                 break;
             }
 
             else
             {
-                m_server.SendMessageToCaptain(answer->GetCaptainName(), "Wrong Answer\n");
+                m_server.SendMessageToCaptain(answer->GetCaptainName(), Messages::wrong_answer);
             }
             
             if (answer_count == m_captains.size())
@@ -138,7 +158,7 @@ namespace pirates_speed
         {
             if(answered_captains.find(captain.second->GetName()) == answered_captains.end())
             {
-                m_server.SendMessageToCaptain(captain.second->GetName(), "Too Slow\n");
+                m_server.SendMessageToCaptain(captain.second->GetName(), Messages::too_slow_answer);
             }
         }
 

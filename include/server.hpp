@@ -11,14 +11,18 @@ namespace pirates_speed
 
     class Server
     {
+        public:
+            enum MessageStatus{
+                MESSAGE_SENT,
+                MESSAGE_CAPTAINNOTFOUND
+            };
         public :
 
             Server(int port, const std::string & ip_address);
         public:
             std::pair<std::string,size_t> AddCaptain();
             void ShoutCommand(const std::string &command);
-            void SendInventoryToCaptain(const std::string &captain_name, const std::string & inventory);
-            void SendMessageToCaptain(const std::string &captain_name, const std::string &message);
+            MessageStatus SendMessageToCaptain(const std::string &captain_name, const std::string &message);
             void SendMessageToAll(const std::string &message);
             void GetAnswer(std::shared_ptr<Answer> &answer);
             void EndRound();

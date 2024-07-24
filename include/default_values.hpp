@@ -15,6 +15,7 @@ namespace pirates_speed
 {
 class DefaultValues{
     public:
+        DefaultValues() = delete;
         static const std::string& getDefaultCommanderName(){
             static const std::string defaultName = "Black Beard";
             return defaultName;
@@ -32,19 +33,25 @@ class DefaultValues{
                 return "";
             }
 
-            std::cout << "Available network interfaces:" << std::endl;
-            for (size_t i = 0; i < interfaces.size(); ++i) {
-                std::cout << i + 1 << ". " << interfaces[i] << std::endl;
-            }
-
             // Prompt user to select an interface
-            int choice;
-            std::cout << "Select an interface by number: ";
-            std::cin >> choice;
+            size_t choice;
+            while(true)
+            {
+                std::cout << "Available network interfaces:" << std::endl;
+                for (size_t i = 0; i < interfaces.size(); ++i) {
+                    std::cout << i + 1 << ". " << interfaces[i] << std::endl;
+                }
 
-            if (choice < 1 || choice > interfaces.size()) {
-                std::cout << "Invalid choice." << std::endl;
-                return "";
+                std::cout << "Select an interface by number: ";
+                std::cin >> choice;
+
+                if (choice < 1 || choice > interfaces.size()) {
+                    std::cout << "Invalid choice." << std::endl;
+                }
+                else
+                {
+                    break;
+                }
             }
 
             std::string selectedInterface = interfaces[choice - 1];

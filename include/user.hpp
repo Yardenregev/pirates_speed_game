@@ -8,10 +8,15 @@ namespace pirates_speed
 class User
 {
 public:
+    enum RegistrationStatus{
+        REGISTRATION_SUCCESS,
+        REGISTRATION_FAILURE
+    };
+public:
     explicit User(const std::string & name, size_t num_of_pirates,
                   const std::string & ip_address, int port
                   );
-    void Register();
+    RegistrationStatus Register();
     void SendMessage(const std::string &message);
     std::string ReceiveMessage();
     void ShowReply();
@@ -25,6 +30,7 @@ private:
 
 private:
     void SendUserDetails();
+    RegistrationStatus IsConnectedToGame();
 };
 
 } // namespace pirates_speed

@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -pthread
+CXXFLAGS = -pthread -Wall
 
 PROJ_SRCS = $(wildcard src/*.cpp) ./include/pirate_types/pirate_types.cpp
 
