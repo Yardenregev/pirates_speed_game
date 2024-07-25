@@ -19,7 +19,7 @@ namespace pirates_speed
 
     void CookCommand::Execute()
     {
-        std::cout << "Cooking..." << std::endl;
+        std::cout << "cooking..." << std::endl;
     }
 
     SailCommand::SailCommand()
@@ -29,7 +29,7 @@ namespace pirates_speed
 
     void SailCommand::Execute()
     {
-        std::cout << "Sailing..." << std::endl;
+        std::cout << "sailing..." << std::endl;
     }
 
     LootCommand::LootCommand()
@@ -39,7 +39,7 @@ namespace pirates_speed
 
     void LootCommand::Execute()
     {
-        std::cout << "Looting..." << std::endl;
+        std::cout << "looting..." << std::endl;
     }
 
     DefendCommand::DefendCommand()
@@ -49,7 +49,7 @@ namespace pirates_speed
 
     void DefendCommand::Execute()
     {
-        std::cout << "Defending..." << std::endl;
+        std::cout << "defending..." << std::endl;
     }
 
 

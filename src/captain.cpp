@@ -1,5 +1,6 @@
-#include "../include/captain.hpp"
 #include <iostream>/*std cout cin*/
+#include "../include/captain.hpp"
+#include "../include/utils.hpp"
 
 namespace pirates_speed
 {
@@ -38,7 +39,7 @@ namespace pirates_speed
             if(m_personal_inventory.Contains(ind_answer))
             {
                 std::shared_ptr<CrewPirate> pirate = m_personal_inventory.Get(ind_answer);
-                if(pirate->GetCommandName() == command)
+                if(Utils::ToLowerCase(pirate->GetCommandName()) == Utils::ToLowerCase(command))
                 {
                     pirate->ExecuteCommand();
                     m_personal_inventory.Remove(ind_answer);

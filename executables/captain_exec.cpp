@@ -32,9 +32,8 @@ int main ()
     int captain_port;
     std::string captain_ip_address;
     std::cout << "Enter captain name: ";
-    std::cin >> captain_name;
+    std::getline(std::cin, captain_name);
     std::cout << "Enter game port ["<< DefaultValues::getDefaultPort()<<"]: ";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::string port_str;
     std::getline(std::cin, port_str);
     try
@@ -47,7 +46,7 @@ int main ()
     }
 
     std::cout << "Enter game ip address: ";
-    std::cin >> captain_ip_address;
+    std::getline(std::cin, captain_ip_address);
 
     if(captain_name.empty() || captain_ip_address.empty() || captain_port == 0)
     {
