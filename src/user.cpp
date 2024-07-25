@@ -1,8 +1,8 @@
+#include <iostream>
 #include "../include/user.hpp"
 #include "../include/exceptions.hpp"
 #include "../include/messages.hpp"
-
-#include <iostream>
+#include "../include/utils.hpp"
 
 namespace pirates_speed
 {
@@ -67,16 +67,17 @@ namespace pirates_speed
         {
             std::string inventory = ReceiveMessage();
             std::string command = "";
+            std::string choice;
             while(!IsGameOver(inventory))
             {
                 SendMessage(Messages::start_round);
                 std::cout << inventory << std::endl;
-                std::cout << "Waiting for command from captain..." << std::endl;
+                std::cout << "Waiting for command from commander..." << std::endl;
                 command = ReceiveMessage();
-                std::cout << "Captain: " << command << std::endl;
-                size_t choice = 0;
-                std::cin >> choice;
-                SendMessage(std::to_string(choice));
+                std::cout << "Commander: " << command << std::endl;
+                Utils::ClearInputBuffer();
+                std::getline(std::cin, choice);
+                SendMessage(choice);
                 std::string reply = ReceiveMessage();
                 std::cout << "Reply: " << reply << std::endl;
                 SendMessage(Messages::end_round);

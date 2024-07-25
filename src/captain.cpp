@@ -33,22 +33,30 @@ namespace pirates_speed
 
     bool Captain::HandleAnswer(std::shared_ptr<Answer> answer, const std::string &command)
     {
-        size_t ind_answer = std::stoi(answer->GetAnswer());
-
-        if(m_personal_inventory.Contains(ind_answer))
-        {
-            std::shared_ptr<CrewPirate> pirate = m_personal_inventory.Get(ind_answer);
-            if(pirate->GetCommandName() == command)
+        try{
+            size_t ind_answer = std::stoi(answer->GetAnswer());
+            if(m_personal_inventory.Contains(ind_answer))
             {
-                pirate->ExecuteCommand();
-                m_personal_inventory.Remove(ind_answer);
-                return true;
+                std::shared_ptr<CrewPirate> pirate = m_personal_inventory.Get(ind_answer);
+                if(pirate->GetCommandName() == command)
+                {
+                    pirate->ExecuteCommand();
+                    m_personal_inventory.Remove(ind_answer);
+                    return true;
+                }
             }
+
+            return false;
+        }
+        catch(std::out_of_range &)
+        {
+            return false;
+        }
+        catch (std::invalid_argument &)
+        {
+            return false;
         }
 
-        // AddRandomPirate();
-
-        return false;
     }
 
     void Captain::AddRandomPirate()

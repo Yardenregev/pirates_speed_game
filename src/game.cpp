@@ -7,12 +7,11 @@
 #include "../include/threadpool.hpp"
 #include "../include/server.hpp"
 #include "../include/messages.hpp"
-
+#include "../include/utils.hpp"
 
 
 namespace pirates_speed
 {
-    static void ClearInputBuffer();
 
     Game::Game(const std::string & commander_name, int port, const std::string & ip_address)
     : m_server(port, ip_address),
@@ -62,7 +61,7 @@ namespace pirates_speed
 
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
-            ClearInputBuffer();
+            Utils::ClearInputBuffer();
             std::getline(std::cin, given_command);
             m_server.ShoutCommand(given_command);   
             m_server.QueueAnswers();
@@ -216,14 +215,6 @@ namespace pirates_speed
     void Game::ReceiveFromAll()
     {
         m_server.ReceiveFromAll();   
-    }
-
-
-    static void ClearInputBuffer()
-    {
-        if (std::cin.peek() == '\n') {
-            std::cin.ignore();
-        }
     }
 
 } // namespace pirates_speed

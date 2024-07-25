@@ -105,16 +105,20 @@ GameMenu::SetupStatus GameMenu::SetUpGame()
     std::getline(std::cin, port_str);
     try{
         commander_port = std::stoi(port_str);
+        if (commander_port <= 0)
+        {
+            commander_port = DefaultValues::getDefaultPort();
+        }
     }
     catch (...)
     {
         commander_port = DefaultValues::getDefaultPort();
     }
+    m_game = std::make_shared<Game>(commander_name, commander_port, commander_ip_address);
+    m_set_up_game = true;
     std::cout << "made game with name " << commander_name
              << ", port " << commander_port << " and ip " 
              << commander_ip_address << std::endl;
-    m_game = std::make_shared<Game>(commander_name, commander_port, commander_ip_address);
-    m_set_up_game = true;
 
     return SETUP_SUCCESS;
 }
