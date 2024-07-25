@@ -12,6 +12,7 @@
 
 namespace pirates_speed
 {
+    static void ClearInputBuffer();
 
     Game::Game(const std::string & commander_name, int port, const std::string & ip_address)
     : m_server(port, ip_address),
@@ -61,7 +62,8 @@ namespace pirates_speed
 
             std::string given_command;
             std::cout << "Enter command: " << std::endl;
-            std::cin >> given_command;
+            ClearInputBuffer();
+            std::getline(std::cin, given_command);
             m_server.ShoutCommand(given_command);   
             m_server.QueueAnswers();
             HandleAnswers(given_command);
@@ -217,5 +219,11 @@ namespace pirates_speed
     }
 
 
+    static void ClearInputBuffer()
+    {
+        if (std::cin.peek() == '\n') {
+            std::cin.ignore();
+        }
+    }
 
 } // namespace pirates_speed

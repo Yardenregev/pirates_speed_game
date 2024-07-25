@@ -19,7 +19,7 @@ int TestGame(const std::string & captain_name,
     {
         return 1;
     }
-    std::cout << "Registered" << std::endl;
+    std::cout << "Registered, waiting for game to start..." << std::endl;
     user.StartGame();
 
     return 0;

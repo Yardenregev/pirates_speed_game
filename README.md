@@ -16,7 +16,6 @@ The winning captain is the first captain to have no pirates on the ship.
 
 ## Known Bugs 🐛
 If multiple messages are being sent instead of one by accident, the synchronization might mess up.
-Messages cannot have spaces, if spaces are entered, each word will be sent in the next message.
 
 ## Depenedencies 📦
 This game is compiled with g++
