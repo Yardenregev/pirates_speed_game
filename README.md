@@ -18,42 +18,57 @@ The winning captain is the first captain to have no pirates on the ship.
 This game is compiled with g++
 
 ## How To Run 🚀
+### Run Commander
 1. in the 'pirates_speed_game' folder, run the following command in the commander computer:
 
 ```bash
 make commander
 ```
 
-2. in the 'pirates_speed_game' folder, run the following command in the captain computer:
-
-```bash
-make captain
-```
-
-3. Run the commander executable in the commander computer.
+2. Run the commander executable in the commander computer.
 
 ```bash
 ./commander.out
 ```
 
-4. Select the menu option to set up the game, then select the network you would like to play, your IP should be assigned automatically
+3. Select the menu option to set up the game, then select the network you would like to play, your IP should be assigned automatically
 
-5. Enter your name, port for the game to be played and commander computer ip address.
+4. Enter your name port for the game to be played.
 
->   For example: "Moby Dick" "8080" "10.10.0.197"
+>   For example: "Moby Dick"
 
-6. When choosing 'Add Captain', run the captain executable in the captain computer.
+5. Enter TCP port for the game to be played
+   
+>   For example: "8080"
+
+6. Once this is done you can select the option to add a captain
+
+### Run Captain
+
+1. in the 'pirates_speed_game' folder, run the following command in the captain computer:
+
+```bash
+make captain
+```
+2. Run the captain executable in the captain computer.
 
 ```bash
 ./captain.out
 ```
 
-7. Enter your name, port for the game to be played and commander computer ip address.
-   The port and ip must be the same as entered in the commander computer.
+3. Enter your captain name
 
->   For example: "Jack Sparrow" "8080" "10.10.0.197"
+>   For example: "Jack Sparrow"
 
-8. Choose 'Start Game' to start the game.
+4. Enter the port you chose for the game when setting up the commander
+
+>   For example "8080"
+
+5. Enter the commander's computer ip address (displayed on the commander terminal).
+
+>   For example "172.12.864.151"
+
+Choose 'Start Game' in the commander's computer to start the game.
 
 ## Playing The Game 🎮
 
